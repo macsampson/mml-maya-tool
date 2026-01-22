@@ -42,94 +42,237 @@ def convert_abgr_to_rgb(color_16bit):
 
 
 def read_mml_tim(filepath):
-    """Read MML container format TIM file and return image."""
+    """Read MML container format TIM file or raw TIM file and return image."""
 
     with open(filepath, "rb") as f:
         data = f.read()
 
     # Check minimum size
+    if len(data) < 20:
+        raise ValueError("File too small to be valid TIM")
+
+    # Detect file format: MML container (type=1) vs raw TIM (magic=0x10)
+    first_dword = struct.unpack('<I', data[0x00:0x04])[0]
+    
+    if first_dword == 0x10:
+        # Raw TIM file - TIM magic is at offset 0
+        print("Detected: Raw TIM file (no MML container)")
+        return read_raw_tim(data)
+    elif first_dword == 1:
+        # MML container format
+        print("Detected: MML container TIM")
+        return read_mml_container_tim(data)
+    else:
+        raise ValueError(f"Unknown file format: first dword = 0x{first_dword:08X}")
+
+
+def read_raw_tim(data):
+    """Parse a raw TIM file (standard PS1 TIM format)."""
+    
+    # TIM header
+    tim_magic = struct.unpack('<I', data[0x00:0x04])[0]
+    tim_flags = struct.unpack('<I', data[0x04:0x08])[0]
+    
+    if tim_magic != 0x10:
+        raise ValueError(f"Invalid TIM magic: 0x{tim_magic:08X}")
+    
+    pMode = tim_flags & 7
+    hasClut = (tim_flags >> 3) & 1
+    
+    print(f"TIM flags: pMode={pMode}, hasClut={hasClut}")
+    
+    offset = 8
+    palette = []
+    
+    if hasClut:
+        # Read CLUT header
+        clut_size = struct.unpack('<I', data[offset:offset+4])[0]
+        clut_x = struct.unpack('<H', data[offset+4:offset+6])[0]
+        clut_y = struct.unpack('<H', data[offset+6:offset+8])[0]
+        clut_w = struct.unpack('<H', data[offset+8:offset+10])[0]
+        clut_h = struct.unpack('<H', data[offset+10:offset+12])[0]
+        
+        print(f"CLUT: {clut_w}x{clut_h} colors at ({clut_x},{clut_y})")
+        
+        # Read palette colors
+        palette_offset = offset + 12
+        num_colors = clut_w * clut_h
+        for i in range(min(num_colors, 256)):
+            if palette_offset + i*2 + 2 <= len(data):
+                color = struct.unpack('<H', data[palette_offset + i*2:palette_offset + i*2 + 2])[0]
+                r, g, b = convert_abgr_to_rgb(color)
+                palette.extend([r, g, b])
+        
+        offset += clut_size
+    
+    # Read pixel data header
+    pixel_size = struct.unpack('<I', data[offset:offset+4])[0]
+    img_x = struct.unpack('<H', data[offset+4:offset+6])[0]
+    img_y = struct.unpack('<H', data[offset+6:offset+8])[0]
+    img_w = struct.unpack('<H', data[offset+8:offset+10])[0]  # Width in 16-bit words
+    img_h = struct.unpack('<H', data[offset+10:offset+12])[0]
+    
+    # Calculate actual pixel width based on color depth
+    if pMode == 0:  # 4-bit
+        width = img_w * 4
+    elif pMode == 1:  # 8-bit
+        width = img_w * 2
+    else:  # 16-bit or 24-bit
+        width = img_w
+    
+    height = img_h
+    print(f"Image: {width}x{height} pixels (pMode={pMode})")
+    
+    pixel_offset = offset + 12
+    pixel_data = data[pixel_offset:]
+    
+    # Raw TIM files use simple linear pixel layout
+    if pMode == 0:  # 4-bit
+        expanded = bytearray()
+        for byte in pixel_data:
+            pix0 = byte & 0x0F
+            pix1 = (byte >> 4) & 0x0F
+            expanded.append(pix0)
+            expanded.append(pix1)
+        
+        needed = width * height
+        if len(expanded) > needed:
+            expanded = expanded[:needed]
+        elif len(expanded) < needed:
+            expanded.extend([0] * (needed - len(expanded)))
+        
+        image = Image.frombytes("P", (width, height), bytes(expanded), "raw", "P", 0, 1)
+        if palette:
+            image.putpalette(palette)
+            
+    elif pMode == 1:  # 8-bit
+        needed = width * height
+        expanded = pixel_data[:needed]
+        if len(expanded) < needed:
+            expanded = expanded + bytes(needed - len(expanded))
+        
+        image = Image.frombytes("P", (width, height), bytes(expanded), "raw", "P", 0, 1)
+        if palette:
+            image.putpalette(palette)
+    else:
+        raise ValueError(f"Unsupported pMode: {pMode}")
+    
+    return image
+
+
+def read_mml_container_tim(data):
+    """Parse an MML container TIM file - matches TIMFile.cs from DashViewer."""
+    
     if len(data) < 0x800:
         raise ValueError("File too small to be valid MML TIM container")
 
-    # Check container type
-    container_type = struct.unpack('<I', data[0x00:0x04])[0]
-    if container_type != 1:
-        raise ValueError(f"Unknown container type: {container_type}")
+    # Read header fields - matching TIMFile.cs offsets exactly
+    # ColorsPerPalette at ofs + 0x14
+    # PaletteCount at ofs + 0x18
+    # ImageX at ofs + 0x1C
+    # ImageY at ofs + 0x20
+    # ImageWidth at ofs + 0x24
+    # ImageHeight at ofs + 0x28
+    
+    colors_per_palette = struct.unpack('<I', data[0x14:0x18])[0]
+    palette_count = struct.unpack('<I', data[0x18:0x1C])[0]
+    image_x = struct.unpack('<I', data[0x1C:0x20])[0]
+    image_y = struct.unpack('<I', data[0x20:0x24])[0]
+    image_width = struct.unpack('<I', data[0x24:0x28])[0]
+    image_height = struct.unpack('<I', data[0x28:0x2C])[0]
 
-    # Read header fields
-    data_size = struct.unpack('<I', data[0x04:0x08])[0]
-    width = struct.unpack('<I', data[0x0C:0x10])[0]
-    height = struct.unpack('<I', data[0x10:0x14])[0]
-    tim_magic = struct.unpack('<I', data[0x14:0x18])[0]
-    tim_flags = struct.unpack('<I', data[0x18:0x1C])[0]
+    print(f"ColorsPerPalette: {colors_per_palette}, PaletteCount: {palette_count}")
+    print(f"ImagePos: ({image_x}, {image_y}), Size: {image_width}x{image_height} (raw)")
 
-    # Verify TIM magic
-    if tim_magic != 0x10:
-        raise ValueError(f"Invalid TIM magic: 0x{tim_magic:08X}")
+    # If no image dimensions, this is a palette-only file
+    if image_width == 0 or image_height == 0:
+        raise ValueError("No image data (palette-only file)")
 
-    # Parse TIM flags
-    pMode = tim_flags & 7
-    hasClut = (tim_flags >> 3) & 1
+    # Read palettes from offset 0x100
+    palettes = []
+    if colors_per_palette != 0 and palette_count != 0:
+        pal_offset = 0x100
+        for i in range(palette_count):
+            palette = []
+            for j in range(colors_per_palette):
+                if pal_offset + 2 <= len(data):
+                    color = struct.unpack('<H', data[pal_offset:pal_offset + 2])[0]
+                    r, g, b = convert_abgr_to_rgb(color)
+                    palette.extend([r, g, b])
+                    pal_offset += 2
+            palettes.append(palette)
+    
+    # Use first palette
+    palette = palettes[0] if palettes else []
 
-    if pMode != 0:
-        raise ValueError(f"Only 4-bit mode supported, got pMode={pMode}")
-    if not hasClut:
-        raise ValueError("Expected CLUT but flag not set")
+    # Calculate actual pixel dimensions based on color depth
+    # From TIMFile.cs: imgw *= 4 for 16-color, imgw *= 2 for 256-color
+    if colors_per_palette == 16:
+        imgw = image_width * 4
+        imgh = image_height
+        block_width = 128
+        block_height = 32
+    elif colors_per_palette == 256:
+        imgw = image_width * 2
+        imgh = image_height
+        block_width = 64  # 128 / 2
+        block_height = 32
+    else:
+        raise ValueError(f"Unsupported color depth: {colors_per_palette}")
 
-    print(f"Container: type={container_type}, size={data_size}")
-    print(f"Image: {width}x{height}, 4-bit indexed with CLUT")
-
-    # Extract CLUT (8 palettes of 16 colors at offset 0x100)
-    clut_offset = 0x100
-    clut_size = 256  # 8 palettes * 16 colors * 2 bytes
-
-    # Read first palette (16 colors)
-    palette = []
-    for i in range(16):
-        color = struct.unpack('<H', data[clut_offset + i*2:clut_offset + i*2 + 2])[0]
-        r, g, b = convert_abgr_to_rgb(color)
-        palette.extend([r, g, b])
+    print(f"Output: {imgw}x{imgh} pixels ({colors_per_palette} colors)")
 
     # Extract pixel data (starts at 0x800)
-    pixel_offset = 0x800
-    pixel_data = data[pixel_offset:]
+    pixel_data = data[0x800:]
 
-    # Calculate actual dimensions from pixel data
-    pixel_count = len(pixel_data) * 2  # 4-bit = 2 pixels per byte
-
-    # Use header dimensions if they make sense, otherwise calculate
-    if width * height * 2 <= pixel_count:
-        # Header dimensions might describe one frame
-        # Check if data suggests multiple frames
-        actual_height = pixel_count // width
-        if actual_height != height:
-            print(f"Note: Header says {height} rows, but data has {actual_height} rows")
-            print(f"      This might be a sprite sheet with multiple frames")
-        height = actual_height
-
-    print(f"Output: {width}x{height} pixels")
-
-    # Expand 4-bit pixels to 8-bit
-    expanded = bytearray()
-    for byte in pixel_data:
-        pix0 = byte & 0x0F
-        pix1 = (byte >> 4) & 0x0F
-        expanded.append(pix0)
-        expanded.append(pix1)
-
-    # Trim to exact size needed
-    needed = width * height
-    if len(expanded) > needed:
-        expanded = expanded[:needed]
-    elif len(expanded) < needed:
-        # Pad with zeros if needed
-        expanded.extend([0] * (needed - len(expanded)))
-
-    # Create image
-    image = Image.frombytes("P", (width, height), bytes(expanded), "raw", "P", 0, 1)
+    # Create image using block-based decoding (matching TIMFile.cs ReloadImage)
+    image = Image.new('P', (imgw, imgh))
+    pixels = image.load()
+    
+    rofs = 0
+    
+    if colors_per_palette == 16:
+        # 4-bit: 2 pixels per byte, iterate bx += 2
+        for y in range(0, imgh, block_height):
+            for x in range(0, imgw, block_width):
+                for by in range(block_height):
+                    for bx in range(0, block_width, 2):
+                        if rofs >= len(pixel_data):
+                            break
+                        
+                        byte = pixel_data[rofs]
+                        idx1 = byte & 0x0F
+                        idx2 = (byte >> 4) & 0x0F
+                        
+                        px1, py = x + bx, y + by
+                        px2 = x + bx + 1
+                        
+                        if px1 < imgw and py < imgh:
+                            pixels[px1, py] = idx1
+                        if px2 < imgw and py < imgh:
+                            pixels[px2, py] = idx2
+                        
+                        rofs += 1
+    else:
+        # 8-bit: 1 pixel per byte
+        for y in range(0, imgh, block_height):
+            for x in range(0, imgw, block_width):
+                for by in range(block_height):
+                    for bx in range(block_width):
+                        if rofs >= len(pixel_data):
+                            break
+                        
+                        byte = pixel_data[rofs]
+                        px, py = x + bx, y + by
+                        
+                        if px < imgw and py < imgh:
+                            pixels[px, py] = byte
+                        
+                        rofs += 1
 
     # Apply palette
-    image.putpalette(palette)
+    if palette:
+        image.putpalette(palette)
 
     return image
 
