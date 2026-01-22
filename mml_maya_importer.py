@@ -24,6 +24,7 @@ if SCRIPT_DIR not in sys.path:
 # Maya imports
 import maya.cmds as cmds
 import maya.OpenMayaUI as omui
+import maya.api.OpenMaya as om
 
 # PySide2 imports
 from PySide2 import QtWidgets, QtCore, QtGui
@@ -308,6 +309,8 @@ class MMLMayaImporter:
         
         cmds.select(clear=True)
         
+        cmds.select(clear=True)
+        
         # Parent root joints to the group
         for i, limb_info in enumerate(limb_indices):
             parent_idx = limb_info['parent']
@@ -320,7 +323,7 @@ class MMLMayaImporter:
             if is_root:
                 cmds.parent(joints[i], root_group)
         
-        # Create mesh pieces for each bone and parent them
+        # Create meshes using MFnMesh for proper UV support
         for bone_idx, limb_info in enumerate(limb_indices):
             render_idx = limb_info['render']
             if render_idx >= len(model['limbs']):
@@ -328,64 +331,126 @@ class MMLMayaImporter:
             
             limb = model['limbs'][render_idx]
             
-            if not limb['vertices']:
-                continue
+            # Prepare mesh data arrays
+            points = om.MFloatPointArray()
+            counts = om.MIntArray()
+            connects = om.MIntArray()
+            u_coords = om.MFloatArray()
+            v_coords = om.MFloatArray()
             
+            # Helper to add UVs and return UV index
+            uv_map = {}  # (u, v) -> index
+            next_uv_idx = 0
+            
+            def get_uv_idx(u_val, v_val):
+                nonlocal next_uv_idx
+                # UV values are pixel coordinates within texture page (256x256)
+                # Normalize to 0-1 based on texture page dimensions
+                # V is flipped (PSX uses opposite Y direction)
+                u_norm = u_val / 256.0
+                v_norm = 1.0 - (v_val / 256.0)
+                
+                key = (u_norm, v_norm)
+                if key not in uv_map:
+                    u_coords.append(u_norm)
+                    v_coords.append(v_norm)
+                    uv_map[key] = next_uv_idx
+                    next_uv_idx += 1
+                return uv_map[key]
+
             # Get bone world position
             if bone_idx < len(world_positions):
                 bx, by, bz = world_positions[bone_idx]
             else:
                 bx, by, bz = 0, 0, 0
             
-            # Build vertices in world space
-            vertices = []
+            # Add vertices
+            # NOTE: We keep vertices in LOCAL space relative to the bone for parenting!
+            # The bone is at (bx, by, bz).
+            # The vertex global pos is (vx*s + bx, vy*s + by, vz*s + bz).
+            # To get local pos relative to bone: Global - Bone = (vx*s, vy*s, vz*s).
+            # So we just scale the raw vertex coordinates.
             for vx, vy, vz in limb['vertices']:
-                wx = vx * cls.SCALE + bx
-                wy = vy * cls.SCALE + by
-                wz = vz * cls.SCALE + bz
-                vertices.append((wx, wy, wz))
+                # Action figure method: Vertices are local to the bone
+                points.append(om.MFloatPoint(vx * cls.SCALE, vy * cls.SCALE, vz * cls.SCALE))
             
-            # Collect faces
-            faces = []
+            # Process faces and UVs
+            face_uv_counts = om.MIntArray()
+            face_uv_ids = om.MIntArray()
+            
+            has_geometry = False
+            
+            # Triangles
             for tri in limb['triangles']:
                 i0, i1, i2 = tri['indices']
-                faces.append([vertices[i0], vertices[i1], vertices[i2]])
-            
+                counts.append(int(3))
+                connects.append(int(i0)); connects.append(int(i1)); connects.append(int(i2))
+                
+                # UVs
+                face_uv_counts.append(3)
+                for u, v in tri['uvs']:
+                    face_uv_ids.append(get_uv_idx(u, v))
+                has_geometry = True
+
+            # Quads (split to triangles) - matches mml_ebd2fbx.py logic exactly
             for quad in limb['quads']:
                 i0, i1, i2, i3 = quad['indices']
-                # Split quad into two triangles
-                faces.append([vertices[i0], vertices[i1], vertices[i2]])
-                faces.append([vertices[i0], vertices[i2], vertices[i3]])
+                
+                # Triangle 1: (i0, i1, i2) with UVs (0, 1, 2)
+                counts.append(int(3))
+                connects.append(int(i0)); connects.append(int(i1)); connects.append(int(i2))
+                face_uv_counts.append(3)
+                face_uv_ids.append(get_uv_idx(quad['uvs'][0][0], quad['uvs'][0][1]))
+                face_uv_ids.append(get_uv_idx(quad['uvs'][1][0], quad['uvs'][1][1]))
+                face_uv_ids.append(get_uv_idx(quad['uvs'][2][0], quad['uvs'][2][1]))
+                
+                # Triangle 2: (i0, i2, i3) with UVs (0, 2, 3)
+                counts.append(int(3))
+                connects.append(int(i0)); connects.append(int(i2)); connects.append(int(i3))
+                face_uv_counts.append(3)
+                face_uv_ids.append(get_uv_idx(quad['uvs'][0][0], quad['uvs'][0][1]))
+                face_uv_ids.append(get_uv_idx(quad['uvs'][2][0], quad['uvs'][2][1]))
+                face_uv_ids.append(get_uv_idx(quad['uvs'][3][0], quad['uvs'][3][1]))
+                has_geometry = True
             
-            if not faces:
+            if not has_geometry:
                 continue
-            
-            # Create mesh piece from faces
-            temp_meshes = []
-            for face_verts in faces:
-                try:
-                    facet = cmds.polyCreateFacet(point=face_verts, constructionHistory=False)
-                    if facet:
-                        temp_meshes.append(facet[0])
-                except:
-                    continue
-            
-            if not temp_meshes:
-                continue
-            
-            # Combine into single mesh for this limb
+                
+            # Create Mesh using MFnMesh
             limb_mesh_name = f"{name}_Limb_{bone_idx:02d}"
-            if len(temp_meshes) > 1:
-                result = cmds.polyUnite(temp_meshes, constructionHistory=False, name=limb_mesh_name)
-                limb_mesh = result[0]
-            else:
-                limb_mesh = cmds.rename(temp_meshes[0], limb_mesh_name)
+            fn_mesh = om.MFnMesh()
             
-            cmds.delete(limb_mesh, constructionHistory=True)
-            
-            # Parent mesh directly to its bone
-            cmds.parent(limb_mesh, joints[bone_idx])
-        
+            try:
+                mesh_obj = fn_mesh.create(
+                    points, counts, connects,
+                    u_coords, v_coords,
+                    parent=om.MObject.kNullObj  # Create under world first
+                )
+                
+                # Assign UVs
+                fn_mesh.assignUVs(face_uv_counts, face_uv_ids)
+                
+                # Rename transform
+                dep_node = om.MFnDependencyNode(mesh_obj)
+                transform_obj = fn_mesh.parent(0)
+                dep_transform = om.MFnDependencyNode(transform_obj)
+                dep_transform.setName(limb_mesh_name)
+                
+                # Parent to joint using commands (safer for mixed API usage)
+                cmds.parent(limb_mesh_name, joints[bone_idx])
+                
+                # Reset transform (since vertices were local, we want identity transform)
+                # But fn_mesh.create makes it at origin, so just parenting is enough.
+                # However, ensure pivots are zeroed if needed.
+                cmds.makeIdentity(limb_mesh_name, apply=False, t=1, r=1, s=1, n=0, pn=1)
+                
+                # Assign default shader (lambert1) to ensure visibility
+                cmds.sets(limb_mesh_name, edit=True, forceElement='initialShadingGroup')
+                
+            except Exception as e:
+                cmds.warning(f"Failed to create mesh for bone {bone_idx}: {e}")
+                continue
+                
         cmds.select(clear=True)
         return root_group
     
@@ -456,8 +521,13 @@ class MMLMayaImporter:
                     vertex_offset + i1,
                     vertex_offset + i2
                 ])
+                PIXEL_TO_FLOAT = 1.0 / 256.0
+                PIXEL_ADJUST = 0.5 / 256.0
                 for u, v in tri['uvs']:
-                    all_uvs.append((u / 255.0, 1.0 - v / 255.0))
+                    all_uvs.append((
+                        u * PIXEL_TO_FLOAT + PIXEL_ADJUST,
+                        1.0 - (v * PIXEL_TO_FLOAT + PIXEL_ADJUST)
+                    ))
             
             # Add quads (split into triangles)
             for quad in limb['quads']:
@@ -1031,16 +1101,28 @@ class MMLImporterUI(QtWidgets.QDialog):
         info_layout.addWidget(self.info_label)
         right_layout.addWidget(info_group)
         
+        # Import Button
+        self.import_btn = QtWidgets.QPushButton("Import Selected")
+        self.import_btn.setMinimumHeight(40)
+        self.import_btn.setStyleSheet("background-color: #4CAF50; color: white; font-weight: bold;")
+        self.import_btn.clicked.connect(self._import_selected)
+        self.import_btn.setEnabled(False)
+        right_layout.addWidget(self.import_btn)
+        
+        # Tools Group
+        tools_group = QtWidgets.QGroupBox("Tools")
+        tools_layout = QtWidgets.QHBoxLayout(tools_group)
+        
+        self.reset_pose_btn = QtWidgets.QPushButton("Reset Pose (Zero Rotations)")
+        self.reset_pose_btn.clicked.connect(self._reset_pose)
+        tools_layout.addWidget(self.reset_pose_btn)
+        
+        right_layout.addWidget(tools_group)
+        
         splitter.addWidget(right_panel)
         splitter.setSizes([350, 350])
         
         main_layout.addWidget(splitter, 1)
-        
-        # Import button
-        self.import_btn = QtWidgets.QPushButton("Import Selected")
-        self.import_btn.setEnabled(False)
-        self.import_btn.setMinimumHeight(40)
-        main_layout.addWidget(self.import_btn)
         
         # Status
         self.status_label = QtWidgets.QLabel("")
@@ -1051,7 +1133,30 @@ class MMLImporterUI(QtWidgets.QDialog):
         self.browse_btn.clicked.connect(self._browse_file)
         self.filter_combo.currentTextChanged.connect(self._filter_assets)
         self.asset_tree.itemSelectionChanged.connect(self._on_selection_changed)
-        self.import_btn.clicked.connect(self._import_selected)
+        # Import button already connected in setup definition
+    
+    def _reset_pose(self):
+        """Reset rotation of selected objects hierarchy to zero."""
+        selection = cmds.ls(selection=True)
+        if not selection:
+            self.status_label.setText("Select root joint/group to reset pose")
+            return
+            
+        count = 0
+        for item in selection:
+            # Get all descendants (joints)
+            relatives = cmds.listRelatives(item, allDescendents=True, type='joint', fullPath=True) or []
+            if cmds.nodeType(item) == 'joint':
+                relatives.append(item)
+            
+            for node in relatives:
+                try:
+                    cmds.setAttr(f"{node}.rotate", 0, 0, 0)
+                    count += 1
+                except:
+                    pass
+        
+        self.status_label.setText(f"Reset rotation for {count} joints")
     
     def _browse_file(self):
         """Open file browser to select .bin file."""
