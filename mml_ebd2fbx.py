@@ -103,6 +103,8 @@ class EBDReader:
 
         # Parse bone translations from hierarchy address
         bone_translations = []
+        animations = []
+        
         if hierarchy_start and (hierarchy_start >> 24) == 0:
             limb_trans_addr = self.read_int(hierarchy_start)
             first_anim_addr = self.read_int(hierarchy_start + 4)
@@ -117,10 +119,13 @@ class EBDReader:
                     t_offset = limb_trans_ofs + i * 8
                     if t_offset + 8 > len(self.data):
                         break
-                    tx = -self.read_short(t_offset)
-                    ty = -self.read_short(t_offset + 2)
-                    tz = -self.read_short(t_offset + 4)
+                    tx = self.read_short(t_offset)  # X is positive in DashViewer
+                    ty = -self.read_short(t_offset + 2) # Y is negated
+                    tz = -self.read_short(t_offset + 4) # Z is negated
                     bone_translations.append((tx, ty, tz))
+                
+                # Parse animations - pass hierarchy_start since anim table is at hierarchy_start+4
+                animations = self.parse_animations(hierarchy_start, limb_count)
 
         # Parse limb information entries
         limbs = []
@@ -137,6 +142,7 @@ class EBDReader:
             "limbs": limbs,
             "limb_indices": limb_indices,
             "bone_translations": bone_translations,
+            "animations": animations,
         }
 
     def parse_limb_info(self, offset):
@@ -215,6 +221,143 @@ class EBDReader:
             "texture_page": texture_page,
             "clut_page": clut_page,
         }
+
+    def parse_animations(self, hierarchy_start, limb_count):
+        """Parse animation data from the hierarchy section.
+        
+        Based on DashViewer's api_readAnims (JavaScript):
+        - Animation pointer table starts at hierarchy_start + 4
+        - Table ends at the address stored at hierarchy_start (limb_trans_ofs)
+        - Each animation pointer points to a frame pointer table
+        - Each frame is packed 12-bit values:
+          - 4 bytes: Root position (packed 12-bit X, Y, Z)
+          - 4.5 bytes per bone: Rotation (alternating 5/4 bytes for even/odd)
+        """
+        animations = []
+        
+        if hierarchy_start is None or (hierarchy_start >> 24) != 0:
+            return animations
+        
+        # firstOfs = value at hierarchy_start (points to limb translations)
+        # This tells us where the animation pointer table ends
+        first_ptr_addr = self.read_int(hierarchy_start)
+        first_ptr_ofs = self.ps1_to_file_offset(first_ptr_addr)
+        
+        if first_ptr_ofs is None or (first_ptr_ofs >> 24) != 0:
+            return animations
+        
+        # Animation pointer table starts at hierarchy_start + 4
+        anim_table_start = hierarchy_start + 4
+        
+        # Read animation pointers from anim_table_start to first_ptr_ofs
+        anim_pointers = []
+        for ofs in range(anim_table_start, first_ptr_ofs, 4):
+            if ofs + 4 > len(self.data):
+                break
+            ptr_addr = self.read_int(ofs)
+            if ptr_addr == 0:
+                continue
+            ptr_ofs = self.ps1_to_file_offset(ptr_addr)
+            if ptr_ofs is not None and (ptr_ofs >> 24) == 0:
+                anim_pointers.append(ptr_ofs)
+        
+        # Parse each animation
+        for anim_idx, anim_ptr in enumerate(anim_pointers):
+            # Each animation has its own frame pointer table
+            # First pointer tells us where frame data starts (and where table ends)
+            first_frame_addr = self.read_int(anim_ptr)
+            first_frame_ofs = self.ps1_to_file_offset(first_frame_addr)
+            
+            if first_frame_ofs is None or (first_frame_ofs >> 24) != 0:
+                continue
+            
+            # Read frame pointers for this animation
+            frame_ptrs = []
+            for ofs in range(anim_ptr, first_frame_ofs, 4):
+                if ofs + 4 > len(self.data):
+                    break
+                p_addr = self.read_int(ofs)
+                p_ofs = self.ps1_to_file_offset(p_addr)
+                if p_ofs is not None and (p_ofs >> 24) == 0:
+                    frame_ptrs.append(p_ofs)
+            
+            if len(frame_ptrs) < 2:
+                continue
+            
+            # Calculate bone count from frame size
+            # Frame size = 4 bytes position + 4.5 bytes per bone (average)
+            frame_len = frame_ptrs[1] - frame_ptrs[0]
+            bone_count = int((frame_len - 4.5) / 4.5)
+            
+            if bone_count <= 0:
+                bone_count = limb_count
+            
+            frames = []
+            
+            for frame_idx, frame_ofs in enumerate(frame_ptrs):
+                if frame_ofs + 8 > len(self.data):
+                    break
+                
+                ofs = frame_ofs
+                
+                # Read root position (4 bytes, packed 12-bit values)
+                raw_x = self.read_ushort(ofs + 0) & 0xFFF
+                raw_y = self.read_ushort(ofs + 1) >> 4
+                raw_z = self.read_ushort(ofs + 3) & 0xFFF
+                
+                # Sign extension for 12-bit values
+                def sign_extend_12(val):
+                    if val & 0x800:
+                        return -((0x800 - (val & 0x7FF)))
+                    return val
+                
+                pos_x = sign_extend_12(raw_x)
+                pos_y = sign_extend_12(raw_y)
+                pos_z = sign_extend_12(raw_z)
+                
+                ofs += 4
+                
+                # Read per-bone rotations (alternating 5/4 bytes)
+                bone_rotations = []
+                for bone_idx in range(bone_count):
+                    if ofs + 5 > len(self.data):
+                        break
+                    
+                    if (bone_idx % 2) == 0:
+                        # Even bones: 5 bytes
+                        rx = (self.read_ushort(ofs + 0) >> 4) & 0xFFF
+                        ry = self.read_ushort(ofs + 2) & 0xFFF
+                        rz = (self.read_ushort(ofs + 3) >> 4) & 0xFFF
+                        ofs += 5
+                    else:
+                        # Odd bones: 4 bytes
+                        rx = self.read_ushort(ofs + 0) & 0xFFF
+                        ry = (self.read_ushort(ofs + 1) >> 4) & 0xFFF
+                        rz = self.read_ushort(ofs + 3) & 0xFFF
+                        ofs += 4
+                    
+                    # Convert to degrees: val / 0xFFF * 360
+                    rot_x = (rx / 0xFFF) * 360.0
+                    rot_y = (ry / 0xFFF) * 360.0
+                    rot_z = (rz / 0xFFF) * 360.0
+                    
+                    bone_rotations.append((rot_x, rot_y, rot_z))
+                
+                frame = {
+                    "root_translation": (pos_x, pos_y, pos_z),
+                    "bone_rotations": bone_rotations,
+                }
+                frames.append(frame)
+            
+            if frames:
+                animations.append({
+                    "index": anim_idx,
+                    "frame_count": len(frames),
+                    "bone_count": bone_count,
+                    "frames": frames
+                })
+        
+        return animations
 
 
 class FBXExporter:
@@ -446,6 +589,9 @@ class FBXExporter:
 
             global_vertex_offset += len(limb["vertices"])
 
+        # Get animations
+        animations = model.get("animations", [])
+
         # Write FBX file
         self._write_fbx(
             output_path,
@@ -456,12 +602,14 @@ class FBXExporter:
             vertex_bone_assignments,
             world_positions,
             model_index,
+            animations,
         )
 
         print(f"Exported to {output_path}")
         print(f"  Bones: {len(bones)}")
         print(f"  Vertices: {len(all_vertices)}")
         print(f"  Triangles: {len(all_indices)}")
+        print(f"  Animations: {len(animations)}")
         return True
 
     def _write_fbx(
@@ -474,8 +622,11 @@ class FBXExporter:
         bone_assignments,
         world_positions,
         model_index,
+        animations=None,
     ):
-        """Write ASCII FBX 7.4 file."""
+        """Write ASCII FBX 7.4 file with optional animations."""
+        if animations is None:
+            animations = []
 
         # Generate IDs
         root_id = self.get_id()
@@ -491,6 +642,29 @@ class FBXExporter:
 
         skin_id = self.get_id()
         cluster_ids = {bone["index"]: self.get_id() for bone in bones}
+
+        # Animation IDs
+        anim_stack_ids = []
+        anim_layer_ids = []
+        anim_curve_node_ids = {}  # {(anim_idx, bone_idx, 'R'/'T'): id}
+        anim_curve_ids = {}  # {(anim_idx, bone_idx, 'R'/'T', axis): id}
+        
+        for anim_idx, anim in enumerate(animations):
+            anim_stack_ids.append(self.get_id())
+            anim_layer_ids.append(self.get_id())
+            
+            for bone in bones:
+                # Rotation curve node
+                anim_curve_node_ids[(anim_idx, bone["index"], 'R')] = self.get_id()
+                # Translation curve node (only for root)
+                if bone["parent"] == -1:
+                    anim_curve_node_ids[(anim_idx, bone["index"], 'T')] = self.get_id()
+                
+                # Individual axis curves for rotation
+                for axis in ['X', 'Y', 'Z']:
+                    anim_curve_ids[(anim_idx, bone["index"], 'R', axis)] = self.get_id()
+                    if bone["parent"] == -1:
+                        anim_curve_ids[(anim_idx, bone["index"], 'T', axis)] = self.get_id()
 
         timestamp = int(time.time())
 
@@ -546,9 +720,19 @@ class FBXExporter:
             f.write("}\n\n")
 
             # Definitions
+            # Calculate animation object counts
+            num_anim_stacks = len(animations)
+            num_anim_layers = len(animations)
+            num_curve_nodes = len(anim_curve_node_ids)
+            num_curves = len(anim_curve_ids)
+            
+            base_count = 5 + len(bones) * 2
+            if animations:
+                base_count += 4  # AnimationStack, AnimationLayer, AnimationCurveNode, AnimationCurve
+            
             f.write("Definitions:  {\n")
             f.write("\tVersion: 100\n")
-            f.write(f"\tCount: {5 + len(bones) * 2}\n")
+            f.write(f"\tCount: {base_count}\n")
             f.write('\tObjectType: "GlobalSettings" {\n')
             f.write("\t\tCount: 1\n")
             f.write("\t}\n")
@@ -570,6 +754,22 @@ class FBXExporter:
             f.write('\tObjectType: "Pose" {\n')
             f.write("\t\tCount: 1\n")
             f.write("\t}\n")
+            
+            # Animation definitions
+            if animations:
+                f.write('\tObjectType: "AnimationStack" {\n')
+                f.write(f"\t\tCount: {num_anim_stacks}\n")
+                f.write("\t}\n")
+                f.write('\tObjectType: "AnimationLayer" {\n')
+                f.write(f"\t\tCount: {num_anim_layers}\n")
+                f.write("\t}\n")
+                f.write('\tObjectType: "AnimationCurveNode" {\n')
+                f.write(f"\t\tCount: {num_curve_nodes}\n")
+                f.write("\t}\n")
+                f.write('\tObjectType: "AnimationCurve" {\n')
+                f.write(f"\t\tCount: {num_curves}\n")
+                f.write("\t}\n")
+            
             f.write("}\n\n")
 
             # Objects
@@ -757,6 +957,126 @@ class FBXExporter:
 
             f.write("\t}\n\n")
 
+            # Animation Objects
+            for anim_idx, anim in enumerate(animations):
+                frames = anim.get("frames", [])
+                num_frames = len(frames)
+                if num_frames == 0:
+                    continue
+                
+                # Frame rate assumption: 30 FPS
+                fps = 30.0
+                duration_sec = num_frames / fps
+                duration_fbx = int(duration_sec * 46186158000)  # FBX time units
+                
+                stack_id = anim_stack_ids[anim_idx]
+                layer_id = anim_layer_ids[anim_idx]
+                
+                # AnimationStack
+                f.write(f'\tAnimationStack: {stack_id}, "AnimStack::Anim_{anim_idx:03d}", "" {{\n')
+                f.write("\t\tProperties70:  {\n")
+                f.write(f'\t\t\tP: "LocalStop", "KTime", "Time", "",{duration_fbx}\n')
+                f.write(f'\t\t\tP: "ReferenceStop", "KTime", "Time", "",{duration_fbx}\n')
+                f.write("\t\t}\n")
+                f.write("\t}\n\n")
+                
+                # AnimationLayer
+                f.write(f'\tAnimationLayer: {layer_id}, "AnimLayer::BaseLayer", "" {{\n')
+                f.write("\t}\n\n")
+                
+                # AnimationCurveNodes and AnimationCurves for each bone
+                for bone in bones:
+                    bone_idx = bone["index"]
+                    is_root = bone["parent"] == -1
+                    
+                    # Rotation CurveNode
+                    rot_node_id = anim_curve_node_ids.get((anim_idx, bone_idx, 'R'))
+                    if rot_node_id:
+                        f.write(f'\tAnimationCurveNode: {rot_node_id}, "AnimCurveNode::R", "" {{\n')
+                        f.write("\t\tProperties70:  {\n")
+                        f.write('\t\t\tP: "d|X", "Number", "", "A",0\n')
+                        f.write('\t\t\tP: "d|Y", "Number", "", "A",0\n')
+                        f.write('\t\t\tP: "d|Z", "Number", "", "A",0\n')
+                        f.write("\t\t}\n")
+                        f.write("\t}\n\n")
+                    
+                    # Translation CurveNode (root only)
+                    if is_root:
+                        trans_node_id = anim_curve_node_ids.get((anim_idx, bone_idx, 'T'))
+                        if trans_node_id:
+                            f.write(f'\tAnimationCurveNode: {trans_node_id}, "AnimCurveNode::T", "" {{\n')
+                            f.write("\t\tProperties70:  {\n")
+                            f.write('\t\t\tP: "d|X", "Number", "", "A",0\n')
+                            f.write('\t\t\tP: "d|Y", "Number", "", "A",0\n')
+                            f.write('\t\t\tP: "d|Z", "Number", "", "A",0\n')
+                            f.write("\t\t}\n")
+                            f.write("\t}\n\n")
+                    
+                    # Rotation curves (X, Y, Z)
+                    for axis_idx, axis in enumerate(['X', 'Y', 'Z']):
+                        curve_id = anim_curve_ids.get((anim_idx, bone_idx, 'R', axis))
+                        if curve_id and frames:
+                            f.write(f'\tAnimationCurve: {curve_id}, "AnimCurve::", "" {{\n')
+                            f.write("\t\tDefault: 0\n")
+                            f.write(f"\t\tKeyVer: 4008\n")
+                            f.write(f"\t\tKeyTime: *{num_frames} {{\n")
+                            f.write("\t\t\ta: ")
+                            times = []
+                            for frame_idx in range(num_frames):
+                                time_fbx = int((frame_idx / fps) * 46186158000)
+                                times.append(str(time_fbx))
+                            f.write(",".join(times))
+                            f.write("\n\t\t}\n")
+                            
+                            f.write(f"\t\tKeyValueFloat: *{num_frames} {{\n")
+                            f.write("\t\t\ta: ")
+                            values = []
+                            for frame_idx, frame in enumerate(frames):
+                                # Get rotation value for this bone from bone_rotations list
+                                bone_rots = frame.get("bone_rotations", [])
+                                if bone_idx < len(bone_rots):
+                                    rot = bone_rots[bone_idx]
+                                    # Values are already in degrees!
+                                    degrees = rot[axis_idx] if axis_idx < len(rot) else 0
+                                    # Apply Y and Z negation like DashViewer
+                                    if axis_idx == 1 or axis_idx == 2:
+                                        degrees = -degrees
+                                else:
+                                    degrees = 0.0
+                                values.append(f"{degrees:.6f}")
+                            f.write(",".join(values))
+                            f.write("\n\t\t}\n")
+                            f.write("\t}\n\n")
+                    
+                    # Translation curves (root only)
+                    if is_root:
+                        for axis_idx, axis in enumerate(['X', 'Y', 'Z']):
+                            curve_id = anim_curve_ids.get((anim_idx, bone_idx, 'T', axis))
+                            if curve_id and frames:
+                                scale = 1.0 / 100.0  # Same scale as model
+                                f.write(f'\tAnimationCurve: {curve_id}, "AnimCurve::", "" {{\n')
+                                f.write("\t\tDefault: 0\n")
+                                f.write(f"\t\tKeyVer: 4008\n")
+                                f.write(f"\t\tKeyTime: *{num_frames} {{\n")
+                                f.write("\t\t\ta: ")
+                                times = []
+                                for frame_idx in range(num_frames):
+                                    time_fbx = int((frame_idx / fps) * 46186158000)
+                                    times.append(str(time_fbx))
+                                f.write(",".join(times))
+                                f.write("\n\t\t}\n")
+                                
+                                f.write(f"\t\tKeyValueFloat: *{num_frames} {{\n")
+                                f.write("\t\t\ta: ")
+                                values = []
+                                for frame_idx, frame in enumerate(frames):
+                                    trans = frame.get("root_translation", (0, 0, 0))
+                                    val = trans[axis_idx] * scale if axis_idx < len(trans) else 0
+                                    values.append(f"{val:.6f}")
+                                f.write(",".join(values))
+                                f.write("\n\t\t}\n")
+                                f.write("\t}\n\n")
+
             f.write("}\n\n")
 
             # Connections
@@ -795,6 +1115,46 @@ class FBXExporter:
                 nid = bone_node_ids[bone["index"]]
                 f.write(f'\tC: "OO",{cid},{skin_id}\n')
                 f.write(f'\tC: "OO",{nid},{cid}\n')
+
+            # Animation connections
+            for anim_idx, anim in enumerate(animations):
+                if not anim.get("frames"):
+                    continue
+                    
+                stack_id = anim_stack_ids[anim_idx]
+                layer_id = anim_layer_ids[anim_idx]
+                
+                # Connect layer to stack
+                f.write(f'\tC: "OO",{layer_id},{stack_id}\n')
+                
+                for bone in bones:
+                    bone_idx = bone["index"]
+                    nid = bone_node_ids[bone_idx]
+                    is_root = bone["parent"] == -1
+                    
+                    # Connect rotation curve node to bone and layer
+                    rot_node_id = anim_curve_node_ids.get((anim_idx, bone_idx, 'R'))
+                    if rot_node_id:
+                        f.write(f'\tC: "OP",{rot_node_id},{nid},"Lcl Rotation"\n')
+                        f.write(f'\tC: "OO",{rot_node_id},{layer_id}\n')
+                        
+                        # Connect curves to curve node
+                        for axis in ['X', 'Y', 'Z']:
+                            curve_id = anim_curve_ids.get((anim_idx, bone_idx, 'R', axis))
+                            if curve_id:
+                                f.write(f'\tC: "OP",{curve_id},{rot_node_id},"d|{axis}"\n')
+                    
+                    # Connect translation curve node (root only)
+                    if is_root:
+                        trans_node_id = anim_curve_node_ids.get((anim_idx, bone_idx, 'T'))
+                        if trans_node_id:
+                            f.write(f'\tC: "OP",{trans_node_id},{nid},"Lcl Translation"\n')
+                            f.write(f'\tC: "OO",{trans_node_id},{layer_id}\n')
+                            
+                            for axis in ['X', 'Y', 'Z']:
+                                curve_id = anim_curve_ids.get((anim_idx, bone_idx, 'T', axis))
+                                if curve_id:
+                                    f.write(f'\tC: "OP",{curve_id},{trans_node_id},"d|{axis}"\n')
 
             f.write("}\n")
 
