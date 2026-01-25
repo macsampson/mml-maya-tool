@@ -23,13 +23,15 @@ from PySide2 import QtWidgets, QtCore, QtGui
 from shiboken2 import wrapInstance
 
 # Import existing parsers
-from mml_ebd2fbx import EBDReader
-from mml_tim2png import read_mml_tim
+from MML.mml_ebd2fbx import EBDReader
+from MML.mml_tim2png import read_mml_tim, render_composite_texture
 
 # Internal imports
-from mml_maya.bin_reader import MMLBinReader, MMLAsset
-from mml_maya.maya_importer import MMLMayaImporter
-from mml_maya.preview_widget import AssetPreviewWidget
+from MML.bin_reader import MMLBinReader, MMLAsset
+from MML.maya_importer import MMLMayaImporter
+from MML.preview_widget import AssetPreviewWidget
+from MML.workspace import MMLWorkspace
+from MML.texture_database import TextureDatabase, get_texture_database
 
 
 def get_maya_main_window():
@@ -55,6 +57,8 @@ class MMLImporterUI(QtWidgets.QDialog):
         self.bin_reader = None
         self.current_file = None
         self._ebd_cache = {}
+        self.workspace = None
+        self.texture_db = None
         
         self._create_ui()
         self._create_connections()
@@ -148,6 +152,40 @@ class MMLImporterUI(QtWidgets.QDialog):
         self.apply_anim_btn.setEnabled(False)
         anim_row.addWidget(self.apply_anim_btn)
         tools_layout.addLayout(anim_row)
+        
+        # Separator
+        tools_layout.addWidget(QtWidgets.QFrame())
+        
+        # Game Data folder row
+        data_row = QtWidgets.QHBoxLayout()
+        data_row.addWidget(QtWidgets.QLabel("Game Data:"))
+        self.data_folder_edit = QtWidgets.QLineEdit()
+        self.data_folder_edit.setPlaceholderText("Select CDDATA/DAT folder...")
+        self.data_folder_edit.setReadOnly(True)
+        data_row.addWidget(self.data_folder_edit)
+        self.data_folder_btn = QtWidgets.QPushButton("...")
+        self.data_folder_btn.setMaximumWidth(30)
+        self.data_folder_btn.clicked.connect(self._browse_game_data)
+        data_row.addWidget(self.data_folder_btn)
+        tools_layout.addLayout(data_row)
+        
+        # Texture selector row
+        tex_row = QtWidgets.QHBoxLayout()
+        tex_row.addWidget(QtWidgets.QLabel("Texture:"))
+        self.texture_combo = QtWidgets.QComboBox()
+        self.texture_combo.addItem("Select texture...")
+        self.texture_combo.setMinimumWidth(150)
+        self.texture_combo.setToolTip("Select which character texture to apply")
+        tex_row.addWidget(self.texture_combo)
+        tools_layout.addLayout(tex_row)
+        
+        # Apply Texture button
+        self.apply_texture_btn = QtWidgets.QPushButton("Apply Texture")
+        self.apply_texture_btn.setStyleSheet("background-color: #2196F3; color: white;")
+        self.apply_texture_btn.clicked.connect(self._apply_texture)
+        self.apply_texture_btn.setEnabled(False)
+        self.apply_texture_btn.setToolTip("Apply selected texture to last imported model")
+        tools_layout.addWidget(self.apply_texture_btn)
         
         right_layout.addWidget(tools_group)
         
@@ -337,9 +375,9 @@ class MMLImporterUI(QtWidgets.QDialog):
             while current_idx < len(limb_indices) and current_idx not in visited:
                 visited.add(current_idx)
                 limb_info = limb_indices[current_idx]
-                trans_idx = limb_info['translation']
-                if trans_idx < len(bone_translations):
-                    tx, ty, tz = bone_translations[trans_idx]
+                bone_idx = limb_info['bone_index']
+                if bone_idx < len(bone_translations):
+                    tx, ty, tz = bone_translations[bone_idx]
                     wx += tx
                     wy += ty
                     wz += tz
@@ -474,6 +512,12 @@ class MMLImporterUI(QtWidgets.QDialog):
                     
                     if result and isinstance(result, dict):
                         self.last_import_result = result
+                        # Store the source BIN file name for texture filtering
+                        self.last_import_result['source_bin'] = os.path.basename(self.current_file).upper() if self.current_file else None
+                        
+                        # Update texture dropdown to show relevant textures
+                        self._update_texture_dropdown()
+                        
                         num_anims = len(result.get('animations', []))
                         self.anim_spin.setMaximum(max(0, num_anims - 1))
                         self.apply_anim_btn.setEnabled(num_anims > 0)
@@ -529,6 +573,196 @@ class MMLImporterUI(QtWidgets.QDialog):
             cmds.warning(f"Animation error: {e}")
             import traceback
             traceback.print_exc()
+    
+    def _browse_game_data(self):
+        """Browse for game data folder containing BIN files."""
+        start_dir = self.data_folder_edit.text() or ""
+        
+        folder = QtWidgets.QFileDialog.getExistingDirectory(
+            self,
+            "Select Game Data Folder (CDDATA/DAT)",
+            start_dir
+        )
+        
+        if folder:
+            self._load_game_data(folder)
+    
+    def _load_game_data(self, folder_path):
+        """Load game data folder and initialize workspace."""
+        self.status_label.setText("Loading game data...")
+        QtWidgets.QApplication.processEvents()
+        
+        try:
+            # Initialize workspace
+            self.workspace = MMLWorkspace()
+            count = self.workspace.index_folder(folder_path)
+            
+            # Load texture database
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            json_path = os.path.join(script_dir, 'data', 'models.json')
+            if os.path.exists(json_path):
+                self.texture_db = TextureDatabase()
+                model_count = self.texture_db.load_from_json(json_path)
+                
+                # Populate texture combo
+                self.texture_combo.clear()
+                self.texture_combo.addItem("Select texture...")
+                
+                # Get model names that have textures, sorted alphabetically
+                names_with_textures = []
+                for config in self.texture_db.models.values():
+                    if config.texture and config.texture.images:
+                        names_with_textures.append(config.name)
+                
+                for name in sorted(names_with_textures):
+                    self.texture_combo.addItem(name)
+                
+                self.status_label.setText(f"Loaded {count} BIN files, {len(names_with_textures)} textures available")
+            else:
+                self.status_label.setText(f"Loaded {count} BIN files (no texture database found)")
+            
+            self.data_folder_edit.setText(folder_path)
+            self.apply_texture_btn.setEnabled(True)
+            
+        except Exception as e:
+            cmds.warning(f"Failed to load game data: {e}")
+            self.status_label.setText(f"Error: {e}")
+    
+    def _update_texture_dropdown(self):
+        """Update texture dropdown to show only textures relevant to the loaded BIN file."""
+        if not self.texture_db:
+            return
+        
+        source_bin = None
+        if self.last_import_result:
+            source_bin = self.last_import_result.get('source_bin')
+        
+        self.texture_combo.clear()
+        self.texture_combo.addItem("Select texture...")
+        
+        if not source_bin:
+            # No filter - show all textures
+            for config in sorted(self.texture_db.models.values(), key=lambda c: c.name):
+                if config.texture and config.texture.images:
+                    self.texture_combo.addItem(config.name)
+            return
+        
+        # Filter textures that reference this BIN file
+        relevant_textures = []
+        for config in self.texture_db.models.values():
+            if not config.texture or not config.texture.images:
+                continue
+            
+            # Check if any image layer references this BIN file
+            for img in config.texture.images:
+                if img.image_file.upper() == source_bin or img.pallet_file.upper() == source_bin:
+                    relevant_textures.append(config.name)
+                    break
+        
+        # Add to dropdown sorted alphabetically
+        for name in sorted(relevant_textures):
+            self.texture_combo.addItem(name)
+        
+        # If we found relevant textures, auto-select the first one
+        if relevant_textures:
+            self.texture_combo.setCurrentIndex(1)
+            self.status_label.setText(f"Found {len(relevant_textures)} matching texture(s)")
+    
+    def _apply_texture(self):
+        """Apply texture to the last imported model."""
+        if not self.last_import_result:
+            cmds.warning("No model imported yet. Import an EBD model first.")
+            return
+        
+        if not self.workspace:
+            cmds.warning("No game data loaded. Select a game data folder first.")
+            return
+        
+        if not self.texture_db:
+            cmds.warning("No texture database loaded.")
+            return
+        
+        model_name = self.last_import_result.get('model_name')
+        if not model_name:
+            cmds.warning("No model name found in import result.")
+            return
+        
+        # Get selected texture from dropdown
+        selected_tex_name = self.texture_combo.currentText()
+        if not selected_tex_name or selected_tex_name == "Select texture...":
+            cmds.warning("Please select a texture from the dropdown.")
+            return
+        
+        self.status_label.setText(f"Applying {selected_tex_name} to {model_name}...")
+        QtWidgets.QApplication.processEvents()
+        
+        try:
+            # Find the selected model config
+            tex_config = None
+            for config in self.texture_db.models.values():
+                if config.name == selected_tex_name:
+                    tex_config = config.texture
+                    break
+            
+            if not tex_config:
+                self.status_label.setText(f"No texture config found for {selected_tex_name}")
+                return
+            
+            if not tex_config.images:
+                self.status_label.setText(f"No texture images defined for {selected_tex_name}")
+                return
+            
+            print(f"[MML] Rendering texture for {selected_tex_name} with {len(tex_config.images)} image layers")
+            for i, img in enumerate(tex_config.images):
+                print(f"[MML]   Layer {i}: {img.image_name} from {img.image_file}")
+            
+            # Render composite texture
+            texture_image = render_composite_texture(tex_config, self.workspace)
+            if texture_image is None:
+                self.status_label.setText("Failed to render texture - check Script Editor for details")
+                return
+            
+            print(f"[MML] Rendered texture: {texture_image.size[0]}x{texture_image.size[1]}")
+            
+            # Save texture to temp file
+            temp_dir = tempfile.gettempdir()
+            texture_path = os.path.join(temp_dir, f"{model_name}_texture.png")
+            texture_image.save(texture_path, "PNG")
+            print(f"[MML] Saved texture to: {texture_path}")
+            
+            # Create Maya material and apply to model
+            self._apply_texture_to_maya_model(model_name, texture_path)
+            
+            self.status_label.setText(f"Applied {selected_tex_name} texture to {model_name}")
+            
+        except Exception as e:
+            cmds.warning(f"Texture error: {e}")
+            import traceback
+            traceback.print_exc()
+            self.status_label.setText(f"Texture error: {e}")
+    
+    def _apply_texture_to_maya_model(self, model_name, texture_path):
+        """Create Maya material with texture and apply to model meshes."""
+        # Create file node
+        file_node = cmds.shadingNode('file', asTexture=True, name=f"{model_name}_texture")
+        cmds.setAttr(f"{file_node}.fileTextureName", texture_path, type="string")
+        
+        # Create shader
+        shader = cmds.shadingNode('lambert', asShader=True, name=f"{model_name}_mat")
+        shading_group = cmds.sets(renderable=True, noSurfaceShader=True, empty=True, name=f"{model_name}_SG")
+        
+        # Connect shader to shading group
+        cmds.connectAttr(f"{shader}.outColor", f"{shading_group}.surfaceShader", force=True)
+        
+        # Connect texture to shader
+        cmds.connectAttr(f"{file_node}.outColor", f"{shader}.color", force=True)
+        
+        # Find meshes in the model group
+        root_group = self.last_import_result.get('root_group')
+        if root_group and cmds.objExists(root_group):
+            meshes = cmds.listRelatives(root_group, allDescendents=True, type='mesh', fullPath=True) or []
+            for mesh in meshes:
+                cmds.sets(mesh, edit=True, forceElement=shading_group)
 
 
 # =============================================================================
