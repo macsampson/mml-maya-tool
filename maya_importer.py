@@ -19,9 +19,10 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om
 
 # Import existing parsers
-from mml_ebd2fbx import EBDReader
-from mml_tim2png import read_mml_tim
+from MML.mml_ebd2fbx import EBDReader
+from MML.mml_tim2png import read_mml_tim
 
+print("MML Maya Importer this is new")
 
 class MMLMayaImporter:
     """Import MML assets into Maya."""
@@ -83,97 +84,104 @@ class MMLMayaImporter:
         limb_indices = model.get('limb_indices', [])
         bone_translations = model.get('bone_translations', [])
         
+        
         if not limb_indices:
             return None
         
-        # Compute world positions for bones
-        world_positions = []
-        for i in range(len(limb_indices)):
+        # Build render_to_bone mapping: render_idx (primId) -> bone_idx (childBone)
+        # Also build bone parent hierarchy
+        # This matches JavaScript: lookup[weights.primId] = bones[weights.childBone]
+        render_to_bone = {}  # render_idx -> first bone that uses this mesh
+        bone_parent = {}     # bone_idx -> parent_bone_idx
+        
+        for i, limb_info in enumerate(limb_indices):
+            render_idx = limb_info['render']
+            parent_bone = limb_info['parent']
+            child_bone = limb_info['bone_index']
+            
+            # Map this mesh to the bone (only first occurrence)
+            if render_idx not in render_to_bone:
+                render_to_bone[render_idx] = child_bone
+            
+            # Build hierarchy (skip first entry like JS does)
+            if i == 0:
+                continue
+            # Skip if self-referential
+            if parent_bone == child_bone:
+                continue
+            # Only set parent if not already set (like JS: if(bones[...].parent) continue)
+            if child_bone not in bone_parent:
+                bone_parent[child_bone] = parent_bone
+        
+        # Compute world positions for each BONE (not limb_indices entry)
+        # Walk up the bone parent hierarchy
+        num_bones = len(bone_translations)
+        bone_world_positions = {}
+        
+        for bone_idx in range(num_bones):
             wx, wy, wz = 0, 0, 0
-            current_idx = i
+            current = bone_idx
             visited = set()
             
-            while current_idx < len(limb_indices) and current_idx not in visited:
-                visited.add(current_idx)
-                limb_info = limb_indices[current_idx]
-                trans_idx = limb_info['translation']
-                
-                if trans_idx < len(bone_translations):
-                    tx, ty, tz = bone_translations[trans_idx]
+            while current not in visited:
+                visited.add(current)
+                if current < len(bone_translations):
+                    tx, ty, tz = bone_translations[current]
                     wx += tx
                     wy += ty
                     wz += tz
                 
-                parent_idx = limb_info['parent']
-                if parent_idx == current_idx or parent_idx >= len(limb_indices):
+                if current in bone_parent:
+                    current = bone_parent[current]
+                else:
                     break
-                current_idx = parent_idx
             
-            world_positions.append((wx * cls.SCALE, wy * cls.SCALE, wz * cls.SCALE))
+            bone_world_positions[bone_idx] = (wx * cls.SCALE, wy * cls.SCALE, wz * cls.SCALE)
         
         # Create root group
         root_group = cmds.group(empty=True, name=f"{name}_grp")
         
-        # Create joints first
-        joints = []
+        # Create joints for each bone
+        joints = {}  # bone_idx -> joint_name
         cmds.select(clear=True)
         
-        for i, limb_info in enumerate(limb_indices):
-            parent_idx = limb_info['parent']
-            render_idx = limb_info['render']
-            
-            # Determine if root
-            is_root = parent_idx == i or parent_idx >= len(limb_indices)
-            
-            # Check for cycles
-            if not is_root and parent_idx < len(limb_indices):
-                parent_render = limb_indices[parent_idx]['render']
-                if parent_render >= render_idx:
-                    is_root = True
-            
+        for bone_idx in range(num_bones):
             # Get position
-            if i < len(world_positions):
-                px, py, pz = world_positions[i]
-            else:
-                px, py, pz = 0, 0, 0
+            px, py, pz = bone_world_positions.get(bone_idx, (0, 0, 0))
             
-            # Select parent if not root
-            if not is_root and parent_idx < len(joints):
-                cmds.select(joints[parent_idx])
+            # Select parent if exists
+            parent_bone = bone_parent.get(bone_idx)
+            if parent_bone is not None and parent_bone in joints:
+                cmds.select(joints[parent_bone])
             else:
                 cmds.select(clear=True)
             
             # Create joint
             joint_name = cmds.joint(
-                name=f'{name}_Bone_{i:02d}',
+                name=f'{name}_Bone_{bone_idx:02d}',
                 position=(px, py, pz),
                 absolute=True
             )
-            joints.append(joint_name)
+            joints[bone_idx] = joint_name
         
         cmds.select(clear=True)
         
-        cmds.select(clear=True)
+        # Parent root bones to the group
+        for bone_idx in range(num_bones):
+            if bone_idx not in bone_parent:
+                if bone_idx in joints:
+                    cmds.parent(joints[bone_idx], root_group)
         
-        # Parent root joints to the group
-        for i, limb_info in enumerate(limb_indices):
-            parent_idx = limb_info['parent']
-            is_root = parent_idx == i or parent_idx >= len(limb_indices)
-            if not is_root and parent_idx < len(limb_indices):
-                parent_render = limb_indices[parent_idx]['render']
-                if parent_render >= limb_info['render']:
-                    is_root = True
+        # Create meshes - iterate through model['limbs'] (the actual primitives)
+        # Only create meshes that are in render_to_bone lookup (like JS does)
+        for limb in model['limbs']:
+            mesh_number = limb['number']  # This is the primId
             
-            if is_root:
-                cmds.parent(joints[i], root_group)
-        
-        # Create meshes using MFnMesh for proper UV support
-        for bone_idx, limb_info in enumerate(limb_indices):
-            render_idx = limb_info['render']
-            if render_idx >= len(model['limbs']):
+            # Skip if this mesh isn't mapped to any bone (like JS: if(!lookup[prim.primId]) continue)
+            if mesh_number not in render_to_bone:
                 continue
             
-            limb = model['limbs'][render_idx]
+            bone_idx = render_to_bone[mesh_number]
             
             # Prepare mesh data arrays
             points = om.MFloatPointArray()
@@ -202,12 +210,6 @@ class MMLMayaImporter:
                     next_uv_idx += 1
                 return uv_map[key]
 
-            # Get bone world position
-            if bone_idx < len(world_positions):
-                bx, by, bz = world_positions[bone_idx]
-            else:
-                bx, by, bz = 0, 0, 0
-            
             # Add vertices
             # NOTE: We keep vertices in LOCAL space relative to the bone for parenting!
             # The bone is at (bx, by, bz).
@@ -259,9 +261,14 @@ class MMLMayaImporter:
             
             if not has_geometry:
                 continue
+            
+            # Check if this bone has a joint
+            if bone_idx not in joints:
+                cmds.warning(f"Bone {bone_idx} not found for mesh {mesh_number}")
+                continue
                 
             # Create Mesh using MFnMesh
-            limb_mesh_name = f"{name}_Limb_{bone_idx:02d}"
+            limb_mesh_name = f"{name}_Mesh_{mesh_number:02d}"
             fn_mesh = om.MFnMesh()
             
             try:
@@ -314,10 +321,10 @@ class MMLMayaImporter:
             while current_idx < len(limb_indices) and current_idx not in visited:
                 visited.add(current_idx)
                 limb_info = limb_indices[current_idx]
-                trans_idx = limb_info['translation']
+                bone_idx = limb_info['bone_index']
                 
-                if trans_idx < len(bone_translations):
-                    tx, ty, tz = bone_translations[trans_idx]
+                if bone_idx < len(bone_translations):
+                    tx, ty, tz = bone_translations[bone_idx]
                     wx += tx
                     wy += ty
                     wz += tz
@@ -355,7 +362,7 @@ class MMLMayaImporter:
                 wy = vy * cls.SCALE + by
                 wz = vz * cls.SCALE + bz
                 all_vertices.append((wx, wy, wz))
-                vertex_bone_map.append(limb_info['translation'])  # Track which bone owns this vertex (Weight ID)
+                vertex_bone_map.append(limb_info['bone_index'])  # Track which bone owns this vertex
             
             # Add triangles
             for tri in limb['triangles']:
@@ -476,10 +483,10 @@ class MMLMayaImporter:
             while current_idx < len(limb_indices) and current_idx not in visited:
                 visited.add(current_idx)
                 limb_info = limb_indices[current_idx]
-                trans_idx = limb_info['translation']
+                bone_idx = limb_info['bone_index']
                 
-                if trans_idx < len(bone_translations):
-                    tx, ty, tz = bone_translations[trans_idx]
+                if bone_idx < len(bone_translations):
+                    tx, ty, tz = bone_translations[bone_idx]
                     wx += tx
                     wy += ty
                     wz += tz
@@ -496,12 +503,12 @@ class MMLMayaImporter:
         cmds.select(clear=True)
         
         for i, limb_info in enumerate(limb_indices):
-            trans_idx = limb_info['translation'] # Weight Bone ID
+            bone_idx = limb_info['bone_index']  # The actual bone index
             
             # Only create a joint if this is a Structural Bone (Index == Weight ID)
             # If Index != Weight ID, this is just extra geometry for an existing bone
             # This filters out "multiple chest bones" (19, 20, 21) which map to Bone 0
-            if i != trans_idx:
+            if i != bone_idx:
                 continue
                 
             parent_idx = limb_info['parent']
