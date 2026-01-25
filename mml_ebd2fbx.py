@@ -172,7 +172,7 @@ class EBDReader:
         if vert_start and vert_count > 0:
             for i in range(vert_count):
                 v_offset = vert_start + i * 8
-                x = -self.read_short(v_offset)
+                x = self.read_short(v_offset)
                 y = -self.read_short(v_offset + 2)
                 z = -self.read_short(v_offset + 4)
                 vertices.append((x, y, z))
@@ -183,13 +183,18 @@ class EBDReader:
             for i in range(tri_count):
                 t_offset = tri_start + i * 12
                 uvs = []
-                for j in range(3):
-                    u = self.data[t_offset + j * 2]
-                    v = self.data[t_offset + j * 2 + 1]
-                    uvs.append((u, v))
+                # DashViewer Order: b, a, c (offsets 2, 0, 4)
+                # b
+                uvs.append((self.data[t_offset + 2], self.data[t_offset + 3]))
+                # a
+                uvs.append((self.data[t_offset + 0], self.data[t_offset + 1]))
+                # c
+                uvs.append((self.data[t_offset + 4], self.data[t_offset + 5]))
+
+                # DashViewer Order: bi, ai, ci (offsets 9, 8, 10)
                 indices = (
-                    self.data[t_offset + 8],
                     self.data[t_offset + 9],
+                    self.data[t_offset + 8],
                     self.data[t_offset + 10],
                 )
                 triangles.append({"indices": indices, "uvs": uvs})
@@ -200,16 +205,22 @@ class EBDReader:
             for i in range(quad_count):
                 q_offset = quad_start + i * 12
                 uvs = []
-                uvs.append((self.data[q_offset + 6], self.data[q_offset + 7]))
-                uvs.append((self.data[q_offset + 4], self.data[q_offset + 5]))
-                uvs.append((self.data[q_offset + 0], self.data[q_offset + 1]))
+                # DashViewer Order: b, a, c, d (offsets 2, 0, 4, 6)
+                # b
                 uvs.append((self.data[q_offset + 2], self.data[q_offset + 3]))
+                # a
+                uvs.append((self.data[q_offset + 0], self.data[q_offset + 1]))
+                # c
+                uvs.append((self.data[q_offset + 4], self.data[q_offset + 5]))
+                # d
+                uvs.append((self.data[q_offset + 6], self.data[q_offset + 7]))
 
+                # DashViewer Order: bi, ai, ci, di (offsets 9, 8, 10, 11)
                 indices = (
-                    self.data[q_offset + 11],
-                    self.data[q_offset + 10],
-                    self.data[q_offset + 8],
                     self.data[q_offset + 9],
+                    self.data[q_offset + 8],
+                    self.data[q_offset + 10],
+                    self.data[q_offset + 11],
                 )
                 quads.append({"indices": indices, "uvs": uvs})
 
@@ -569,6 +580,9 @@ class FBXExporter:
             # Add quads
             for quad in limb["quads"]:
                 i0, i1, i2, i3 = quad["indices"]
+                u0, u1, u2, u3 = quad["uvs"]
+                
+                # Tri 1: i0, i1, i2 (bi, ai, ci)
                 all_indices.append(
                     (
                         global_vertex_offset + i0,
@@ -576,31 +590,38 @@ class FBXExporter:
                         global_vertex_offset + i2,
                     )
                 )
+                
+                # Tri 2: i3, i0, i2 (di, bi, ci)
                 all_indices.append(
                     (
+                        global_vertex_offset + i3,
                         global_vertex_offset + i0,
                         global_vertex_offset + i2,
-                        global_vertex_offset + i3,
                     )
                 )
 
                 # UVs processing
-                u0, v0 = quad["uvs"][0]
-                u1, v1 = quad["uvs"][1]
-                u2, v2 = quad["uvs"][2]
-                u3, v3 = quad["uvs"][3]
+                # Tri 1: u0, u1, u2 (b, a, c)
+                u_0, v_0 = u0
+                u_1, v_1 = u1
+                u_2, v_2 = u2
+                
                 all_uvs.extend(
                     [
-                        (u0 / 255.0, 1.0 - v0 / 255.0),
-                        (u1 / 255.0, 1.0 - v1 / 255.0),
-                        (u2 / 255.0, 1.0 - v2 / 255.0),
+                        (u_0 / 255.0, 1.0 - v_0 / 255.0),
+                        (u_1 / 255.0, 1.0 - v_1 / 255.0),
+                        (u_2 / 255.0, 1.0 - v_2 / 255.0),
                     ]
                 )
+                
+                # Tri 2: u3, u0, u2 (d, b, c)
+                u_3, v_3 = u3
+                
                 all_uvs.extend(
                     [
-                        (u0 / 255.0, 1.0 - v0 / 255.0),
-                        (u2 / 255.0, 1.0 - v2 / 255.0),
-                        (u3 / 255.0, 1.0 - v3 / 255.0),
+                        (u_3 / 255.0, 1.0 - v_3 / 255.0),
+                        (u_0 / 255.0, 1.0 - v_0 / 255.0),
+                        (u_2 / 255.0, 1.0 - v_2 / 255.0),
                     ]
                 )
 
