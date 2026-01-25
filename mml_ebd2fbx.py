@@ -92,12 +92,12 @@ class EBDReader:
             idx_offset = limb_info_start + 0x10 + i * 4
             render_idx = self.data[idx_offset]
             parent_idx = self.data[idx_offset + 1]
-            trans_idx = self.data[idx_offset + 2]
+            bone_idx = self.data[idx_offset + 2]  # The actual bone index (childBone in JS)
             limb_indices.append(
                 {
                     "render": render_idx,
                     "parent": parent_idx,
-                    "translation": trans_idx,
+                    "bone_index": bone_idx,  # Renamed from 'translation' for clarity
                 }
             )
 
@@ -393,11 +393,11 @@ class FBXExporter:
             while current_idx < num_limbs and current_idx not in visited:
                 visited.add(current_idx)
                 limb_info = limb_indices[current_idx]
-                trans_idx = limb_info["translation"]
 
-                # Add this bone's translation
-                if trans_idx < len(bone_translations):
-                    tx, ty, tz = bone_translations[trans_idx]
+                # Add this bone's translation using the actual bone index
+                bone_idx = limb_info["bone_index"]
+                if bone_idx < len(bone_translations):
+                    tx, ty, tz = bone_translations[bone_idx]
                     wx += tx
                     wy += ty
                     wz += tz
@@ -503,22 +503,40 @@ class FBXExporter:
 
         global_vertex_offset = 0
 
-        for bone_idx, limb_info in enumerate(limb_indices):
+        # Build a mapping from render_number (primId) to the actual bone index
+        # This matches JavaScript: lookup[weights.primId] = bones[weights.childBone]
+        render_to_bone = {}
+        for limb_info in limb_indices:
+            render_number = limb_info["render"]  # primId
+            bone_idx = limb_info["bone_index"]   # childBone - the ACTUAL bone index
+            if render_number not in render_to_bone:
+                render_to_bone[render_number] = bone_idx
 
-            # Get the specific mesh meant for this bone
-            render_idx = limb_info["render"]
+        # Build lookup table: limb number -> limb data
+        limb_by_number = {}
+        for limb in model["limbs"]:
+            limb_by_number[limb["number"]] = limb
 
-            # Safety check
-            if render_idx >= len(model["limbs"]):
+        # Process each unique mesh exactly once
+        # Iterate through meshes by their number (not array position)
+        processed_meshes = set()
+        
+        for limb in model["limbs"]:
+            mesh_number = limb["number"]
+            
+            # Skip if already processed (shouldn't happen, but safety check)
+            if mesh_number in processed_meshes:
                 continue
-
-            limb = model["limbs"][render_idx]
+            processed_meshes.add(mesh_number)
+            
+            # Find which bone this mesh belongs to
+            bone_idx = render_to_bone.get(mesh_number)
+            if bone_idx is None:
+                # No bone references this mesh - skip it
+                continue
 
             # Get bone world position
             if bone_idx < len(world_positions):
-                # CRITICAL FIX: Scale the bone position!
-                # The previous error was adding Raw Bone Position (Huge) to Scaled Vertex (Small).
-                # We must scale both to ensure they exist in the same coordinate space.
                 raw_pos = world_positions[bone_idx]
                 bx = raw_pos[0] * scale
                 by = raw_pos[1] * scale
@@ -526,8 +544,7 @@ class FBXExporter:
             else:
                 bx, by, bz = 0.0, 0.0, 0.0
 
-            # Add vertices
-            # We take the local vertex, scale it, and add the SCALED bone world position.
+            # Add vertices - assign to the correct bone
             for vx, vy, vz in limb["vertices"]:
                 wx = vx * scale + bx
                 wy = vy * scale + by
