@@ -1,0 +1,2310 @@
+{
+    "20": {
+        "name": "ServBot",
+        "textures": [
+            {
+                "image_file": "DEMO_DAT.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00a\\EM0000.TIM",
+                "pallet_file": "DEMO_DAT.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00a\\EM0000.TIM"
+            }
+        ]
+    },
+    "40": {
+        "name": "Feldynaught",
+        "textures": [
+            {
+                "image_file": "ST05_01.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR01\\BS0000.TIM",
+                "pallet_file": "ST05_01.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR01\\BS0000.TIM"
+            }
+        ]
+    },
+    "140": {
+        "name": "Marlwolf",
+        "textures": [
+            {
+                "image_file": "ST0A_00.BIN",
+                "image_name": "..\\OBJ\\ST0A\\AR00A\\BS0100.TIM",
+                "pallet_file": "ST0A_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0A\\AR00A\\BS0100.TIM"
+            }
+        ]
+    },
+    "220": {
+        "name": "Arukoitan",
+        "textures": [
+            {
+                "image_file": "ST09_00.BIN",
+                "image_name": "..\\OBJ\\ST09\\AR00\\EM0200.TIM",
+                "pallet_file": "ST09_00.BIN",
+                "pallet_name": "..\\OBJ\\ST09\\AR00\\EM0200.TIM"
+            }
+        ]
+    },
+    "240": {
+        "name": "Hanmuru Doll",
+        "textures": [
+            {
+                "image_file": "ST00_03.BIN",
+                "image_name": "..\\OBJ\\ST00\\AR01\\BS0200x.TIM",
+                "pallet_file": "ST00_03.BIN",
+                "pallet_name": "..\\OBJ\\ST00\\AR01\\BS0200x.TIM"
+            }
+        ]
+    },
+    "320": {
+        "name": "Horokko",
+        "textures": [
+            {
+                "image_file": "ST00_01.BIN",
+                "image_name": "..\\OBJ\\ST00\\AR01\\EM0300.TIM",
+                "pallet_file": "ST00_01.BIN",
+                "pallet_name": "..\\OBJ\\ST00\\AR01\\EM0300.TIM"
+            }
+        ]
+    },
+    "360": {
+        "name": "Marlwolf Bomb 0",
+        "textures": [
+            {
+                "image_file": "ST0A_00.BIN",
+                "image_name": "..\\OBJ\\ST0A\\AR00A\\BS0100.TIM",
+                "pallet_file": "ST0A_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0A\\AR00A\\BS0100.TIM"
+            }
+        ]
+    },
+    "420": {
+        "name": "Shekuten",
+        "textures": [
+            {
+                "image_file": "ST09_00.BIN",
+                "image_name": "..\\OBJ\\ST09\\AR00\\EM0400.TIM",
+                "pallet_file": "ST09_00.BIN",
+                "pallet_name": "..\\OBJ\\ST09\\AR00\\EM0400.TIM"
+            }
+        ]
+    },
+    "440": {
+        "name": "Cannam",
+        "textures": [
+            {
+                "image_file": "ST00_02.BIN",
+                "image_name": "..\\OBJ\\ST00\\AR01\\BS0400.TIM",
+                "pallet_file": "ST00_02.BIN",
+                "pallet_name": "..\\OBJ\\ST00\\AR01\\BS0400.TIM"
+            }
+        ]
+    },
+    "460": {
+        "name": "Car 0",
+        "textures": [
+            {
+                "image_file": "ST05_00.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00A\\CA0000.TIM",
+                "pallet_file": "ST05_00.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00A\\CA0000.TIM"
+            }
+        ]
+    },
+    "520": {
+        "name": "Roll Caskett",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM0500.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM0500.TIM"
+            }
+        ]
+    },
+    "540": {
+        "name": "Megaman",
+        "textures": [
+            {
+                "image_file": "INIT_DAT.BIN",
+                "image_name": "..\\OBJ\\COMM\\PL0000.TIM",
+                "pallet_file": "ST00_00.BIN",
+                "pallet_name": "..\\OBJ\\COMM\\PL0000.TIM"
+            },
+            {
+                "image_file": "ST00_00.BIN",
+                "image_name": "..\\OBJ\\FACE\\PL00B01.TIM",
+                "pallet_file": "ST00_00.BIN",
+                "pallet_name": "..\\OBJ\\FACE\\PL00B01.TIM"
+            },
+            {
+                "image_file": "ST0D_02.BIN",
+                "image_name": "..\\OBJ\\ST0D\\AR02\\DIF01.TIM",
+                "pallet_file": "ST0D_02.BIN",
+                "pallet_name": "..\\OBJ\\ST0D\\AR02\\DIF01.TIM"
+            }
+        ]
+    },
+    "620": {
+        "name": "Dustin Cowlick Kid",
+        "textures": [
+            {
+                "image_file": "ST03_00B.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00B\\EM0600.TIM",
+                "pallet_file": "ST03_00B.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00B\\EM0600.TIM"
+            }
+        ]
+    },
+    "640": {
+        "name": "Roll (Cutscene)",
+        "textures": [
+            {
+                "image_file": "ST02.BIN",
+                "image_name": "..\\OBJ\\ST02\\AR00\\BS0600.TIM",
+                "pallet_file": "ST02.BIN",
+                "pallet_name": "..\\OBJ\\ST02\\AR00\\BS0600.TIM"
+            },
+            {
+                "image_file": "ST02.BIN",
+                "image_name": "..\\OBJ\\ST02\\AR00\\BS0603.TIM",
+                "pallet_file": "ST02.BIN",
+                "pallet_name": "..\\OBJ\\ST02\\AR00\\BS0603.TIM"
+            },
+            {
+                "image_file": "ST0D_02.BIN",
+                "image_name": "..\\OBJ\\ST0D\\AR02\\DIF01.TIM",
+                "pallet_file": "ST0D_02.BIN",
+                "pallet_name": "..\\OBJ\\ST0D\\AR02\\DIF01.TIM"
+            }
+        ]
+    },
+    "720": {
+        "name": "Drache",
+        "textures": [
+            {
+                "image_file": "ST05_01C.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR01\\EM0700.TIM",
+                "pallet_file": "ST05_01C.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR01\\EM0700.TIM"
+            }
+        ]
+    },
+    "740": {
+        "name": "Barrell (Cutscene)",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM2500.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM2500.TIM"
+            },
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM2500.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM2501.TIM"
+            },
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM2500.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM2501.TIM"
+            },
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM2500.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM2501.TIM"
+            }
+        ]
+    },
+    "820": {
+        "name": "Beast Hunter Dog",
+        "textures": [
+            {
+                "image_file": "ST08_03.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR03\\EM5200.TIM",
+                "pallet_file": "ST08_03.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR03\\EM5200.TIM"
+            }
+        ]
+    },
+    "840": {
+        "name": "Hanmuru Doll (CutScene)",
+        "textures": [
+            {
+                "image_file": "ST00_03.BIN",
+                "image_name": "..\\OBJ\\ST00\\AR01\\BS0200x.TIM",
+                "pallet_file": "ST00_03.BIN",
+                "pallet_name": "..\\OBJ\\ST00\\AR01\\BS0200x.TIM"
+            }
+        ]
+    },
+    "920": {
+        "name": "Junk Shop Lady",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM0900.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM0900.TIM"
+            }
+        ]
+    },
+    "940": {
+        "name": "Tron Bonne (Cutscene)",
+        "textures": [
+            {
+                "image_file": "ST05_00B.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00B\\BS0900.TIM",
+                "pallet_file": "ST05_00B.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00B\\BS0900.TIM"
+            },
+            {
+                "image_file": "ST05_00B.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00B\\BS0902.TIM",
+                "pallet_file": "ST05_00B.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00B\\BS0900.TIM"
+            }
+        ]
+    },
+    "1020": {
+        "name": "Bird",
+        "textures": []
+    },
+    "1060": {
+        "name": "Drache Magnet",
+        "textures": [
+            {
+                "image_file": "ST06_02.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR02\\SH1000.TIM",
+                "pallet_file": "ST06_02.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR02\\SH1000.TIM"
+            }
+        ]
+    },
+    "1120": {
+        "name": "Data the Monkey",
+        "textures": [
+            {
+                "image_file": "EXIT_MAP.BIN",
+                "image_name": "..\\BG\\CHAR\\GAUGE01u.TIM",
+                "pallet_file": "EXIT_MAP.BIN",
+                "pallet_name": "..\\OBJ\\COMM\\EM1100.TIM"
+            }
+        ]
+    },
+    "1140": {
+        "name": "Karumuna Bash 0",
+        "textures": [
+            {
+                "image_file": "ST13_00B.BIN",
+                "image_name": "..\\OBJ\\ST13\\AR00\\BS1100.TIM",
+                "pallet_file": "ST13_00B.BIN",
+                "pallet_name": "..\\OBJ\\ST13\\AR00\\BS1100.TIM"
+            }
+        ]
+    },
+    "1160": {
+        "name": "Support Car",
+        "textures": [
+            {
+                "image_file": "EXIT_MAP.BIN",
+                "image_name": "..\\OBJ\\COMM\\SH1100.TIM",
+                "pallet_file": "EXIT_MAP.BIN",
+                "pallet_name": "..\\OBJ\\COMM\\SH1100.TIM"
+            }
+        ]
+    },
+    "1240": {
+        "name": "Gesellschaft (with Cannons)",
+        "textures": [
+            {
+                "image_file": "ST17.BIN",
+                "image_name": "..\\OBJ\\ST17\\AR00\\EM0B00.TIM",
+                "pallet_file": "ST17.BIN",
+                "pallet_name": "..\\OBJ\\ST17\\AR00\\EM0B00.TIM"
+            }
+        ]
+    },
+    "1260": {
+        "name": "Boat",
+        "textures": [
+            {
+                "image_file": "ST0B_00.BIN",
+                "image_name": "..\\OBJ\\ST0B\\AR00\\BOAT.TIM",
+                "pallet_file": "ST0B_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0B\\AR00\\BOAT.TIM"
+            }
+        ]
+    },
+    "1320": {
+        "name": "Junk Shop Owner",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM1300B.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM1300B.TIM"
+            }
+        ]
+    },
+    "1340": {
+        "name": "Megaman Juno",
+        "textures": [
+            {
+                "image_file": "ST1A_01B.BIN",
+                "image_name": "..\\OBJ\\ST1A\\AR01\\BS1300.TIM",
+                "pallet_file": "ST1A_01B.BIN",
+                "pallet_name": "..\\OBJ\\ST1A\\AR01\\BS1300.TIM"
+            },
+            {
+                "image_file": "ST1A_01B.BIN",
+                "image_name": "..\\OBJ\\FACE\\BS1304.TIM",
+                "pallet_file": "ST1A_01B.BIN",
+                "pallet_name": "..\\OBJ\\ST1A\\AR01\\BS1300.TIM"
+            }
+        ]
+    },
+    "1360": {
+        "name": "Mouse",
+        "textures": [
+            {
+                "image_file": "ST09_00.BIN",
+                "image_name": "..\\OBJ\\ST09\\AR00\\MOUSE.TIM",
+                "pallet_file": "ST09_00.BIN",
+                "pallet_name": "..\\OBJ\\ST09\\AR00\\MOUSE.TIM"
+            }
+        ]
+    },
+    "1420": {
+        "name": "Amelia the Mayor",
+        "textures": [
+            {
+                "image_file": "ST03_07.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR07\\EM1400.TIM",
+                "pallet_file": "ST03_07.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR07\\EM1400.TIM"
+            }
+        ]
+    },
+    "1440": {
+        "name": "Gai-nee Tooren",
+        "textures": [
+            {
+                "image_file": "ST1D_02.BIN",
+                "image_name": "..\\OBJ\\ST1D\\AR02\\BS1400.TIM",
+                "pallet_file": "ST1D_02.BIN",
+                "pallet_name": "..\\OBJ\\ST1D\\AR02\\BS1400.TIM"
+            }
+        ]
+    },
+    "1460": {
+        "name": "Hawk",
+        "textures": [
+            {
+                "image_file": "ST0D_02.BIN",
+                "image_name": "..\\OBJ\\ST0D\\AR02\\TONBI.TIM",
+                "pallet_file": "ST0D_02.BIN",
+                "pallet_name": "..\\OBJ\\ST0D\\AR02\\TONBI.TIM"
+            }
+        ]
+    },
+    "1520": {
+        "name": "NPC Girl",
+        "textures": [
+            {
+                "image_file": "ST04_00D.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR00D\\EM1500.TIM",
+                "pallet_file": "ST04_00D.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR00D\\EM1500.TIM"
+            }
+        ]
+    },
+    "1540": {
+        "name": "Garudoriten (Cutscene)",
+        "textures": [
+            {
+                "image_file": "ST14_00B.BIN",
+                "image_name": "..\\OBJ\\ST14\\AR00\\BS1500.TIM",
+                "pallet_file": "ST14_00B.BIN",
+                "pallet_name": "..\\OBJ\\ST14\\AR00\\BS1500.TIM"
+            }
+        ]
+    },
+    "1560": {
+        "name": "Broken Support Car",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\SH1500.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\SH1500.TIM"
+            }
+        ]
+    },
+    "1620": {
+        "name": "Bensley",
+        "textures": [
+            {
+                "image_file": "ST04_00.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR00A\\EM0d00.TIM",
+                "pallet_file": "ST04_00.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR00A\\EM1600.TIM"
+            }
+        ]
+    },
+    "1640": {
+        "name": "Megaman Juno Stage 2",
+        "textures": [
+            {
+                "image_file": "ST1A_02B.BIN",
+                "image_name": "..\\OBJ\\ST1A\\AR02\\BS1600.TIM",
+                "pallet_file": "ST1A_02B.BIN",
+                "pallet_name": "..\\OBJ\\ST1A\\AR02\\BS1600.TIM"
+            }
+        ]
+    },
+    "1660": {
+        "name": "Bon Bonne Tongue Part",
+        "textures": [
+            {
+                "image_file": "ST06_02.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR02\\BS0D00.TIM",
+                "pallet_file": "ST06_02.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR02\\BS0D00.TIM"
+            }
+        ]
+    },
+    "1720": {
+        "name": "Nurse with Short Hair",
+        "textures": [
+            {
+                "image_file": "ST05_00J.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00J\\EM1700.TIM",
+                "pallet_file": "ST05_00J.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00J\\EM1700.TIM"
+            }
+        ]
+    },
+    "1740": {
+        "name": "Garudoriten",
+        "textures": [
+            {
+                "image_file": "ST14_00B.BIN",
+                "image_name": "..\\OBJ\\ST14\\AR00\\BS1500.TIM",
+                "pallet_file": "ST14_00B.BIN",
+                "pallet_name": "..\\OBJ\\ST14\\AR00\\BS1500.TIM"
+            }
+        ]
+    },
+    "1760": {
+        "name": "Bon Bonne Missile",
+        "textures": [
+            {
+                "image_file": "ST06_02.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR02\\BS0D00.TIM",
+                "pallet_file": "ST06_02.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR02\\BS0D00.TIM"
+            }
+        ]
+    },
+    "1860": {
+        "name": "Missile",
+        "textures": [
+            {
+                "image_file": "ST0B_00.BIN",
+                "image_name": "..\\OBJ\\ST0B\\AR00\\EM3100.TIM",
+                "pallet_file": "ST0B_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0B\\AR00\\SH1800.TIM"
+            }
+        ]
+    },
+    "1920": {
+        "name": "Mirumijee",
+        "textures": [
+            {
+                "image_file": "ST00_01.BIN",
+                "image_name": "..\\OBJ\\ST00\\AR01\\EM0400.TIM",
+                "pallet_file": "ST00_01.BIN",
+                "pallet_name": "..\\OBJ\\ST00\\AR01\\EM0400.TIM"
+            }
+        ]
+    },
+    "1960": {
+        "name": "Barukon Gelede (Submerged)",
+        "textures": [
+            {
+                "image_file": "ST0B_00.BIN",
+                "image_name": "..\\OBJ\\ST0B\\AR00\\BS0C00.TIM",
+                "pallet_file": "ST0B_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0B\\AR00\\BS0C00.TIM"
+            }
+        ]
+    },
+    "2020": {
+        "name": "Maiberu Haagen 0",
+        "textures": [
+            {
+                "image_file": "ST06_02.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR02\\EM2000.TIM",
+                "pallet_file": "ST06_02.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR02\\EM2000.TIM"
+            }
+        ]
+    },
+    "2160": {
+        "name": "Beaster Hunter Ball",
+        "textures": [
+            {
+                "image_file": "ST08_03.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR03\\BALL.TIM",
+                "pallet_file": "ST08_03.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR03\\BALL.TIM"
+            }
+        ]
+    },
+    "2220": {
+        "name": "Old Man",
+        "textures": [
+            {
+                "image_file": "ST05_00G.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00G\\EM2200.TIM",
+                "pallet_file": "ST05_00G.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00G\\EM2200.TIM"
+            }
+        ]
+    },
+    "2260": {
+        "name": "Car Type 2",
+        "textures": [
+            {
+                "image_file": "ST05_00E.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00E\\CA0000.TIM",
+                "pallet_file": "ST05_00E.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00E\\CA0001.TIM"
+            }
+        ]
+    },
+    "2320": {
+        "name": "Horunisse 0",
+        "textures": [
+            {
+                "image_file": "ST06_02.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR02\\EM2300.TIM",
+                "pallet_file": "ST06_02.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR02\\EM2300.TIM"
+            }
+        ]
+    },
+    "2360": {
+        "name": "Garudoriten (Dormant)",
+        "textures": [
+            {
+                "image_file": "ST14_00B.BIN",
+                "image_name": "..\\OBJ\\ST14\\AR00\\BS1500.TIM",
+                "pallet_file": "ST14_00B.BIN",
+                "pallet_name": "..\\OBJ\\ST14\\AR00\\BS1500.TIM"
+            }
+        ]
+    },
+    "2420": {
+        "name": "Police Man",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM2400.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM2400.TIM"
+            }
+        ]
+    },
+    "2520": {
+        "name": "Barrell Caskett",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM2500.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM2500.TIM"
+            },
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM2500.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM2501.TIM"
+            },
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM2500.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM2501.TIM"
+            },
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM2500.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM2501.TIM"
+            }
+        ]
+    },
+    "2620": {
+        "name": "Inspector",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM2600.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM2600.TIM"
+            }
+        ]
+    },
+    "2660": {
+        "name": "Balloon Fantasy 0",
+        "textures": [
+            {
+                "image_file": "ST08_03.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM",
+                "pallet_file": "ST08_03.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM"
+            }
+        ]
+    },
+    "2720": {
+        "name": "Ship Wheel",
+        "textures": [
+            {
+                "image_file": "ST02.BIN",
+                "image_name": "..\\OBJ\\ST02\\AR00\\BS0603.TIM",
+                "pallet_file": "ST02.BIN",
+                "pallet_name": "..\\OBJ\\ST02\\AR00\\EM2701.TIM"
+            }
+        ]
+    },
+    "2760": {
+        "name": "Fokkerwolf Missile",
+        "textures": [
+            {
+                "image_file": "ST17C.BIN",
+                "image_name": "..\\OBJ\\ST17\\AR00\\BS0F00.TIM",
+                "pallet_file": "ST17C.BIN",
+                "pallet_name": "..\\OBJ\\ST17\\AR00\\BS0F00.TIM"
+            }
+        ]
+    },
+    "2820": {
+        "name": "Tron Bonne",
+        "textures": [
+            {
+                "image_file": "ST05_00.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00A\\EM2800.TIM",
+                "pallet_file": "ST05_00.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00A\\EM2800.TIM"
+            }
+        ]
+    },
+    "2860": {
+        "name": "Water Ripple",
+        "textures": [
+            {
+                "image_file": "ST14_00.BIN",
+                "image_name": "..\\OBJ\\ST14\\AR00\\EM4B00.TIM",
+                "pallet_file": "ST14_00.BIN",
+                "pallet_name": "..\\OBJ\\ST14\\AR00\\SHIBUKI.TIM"
+            }
+        ]
+    },
+    "3020": {
+        "name": "Kattelox TV Producer",
+        "textures": [
+            {
+                "image_file": "ST04_00E.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR00E\\EM3000.TIM",
+                "pallet_file": "ST04_00E.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR00E\\EM3000.TIM"
+            }
+        ]
+    },
+    "3120": {
+        "name": "Torpedo",
+        "textures": [
+            {
+                "image_file": "ST0B_00.BIN",
+                "image_name": "..\\OBJ\\ST0B\\AR00\\EM3100.TIM",
+                "pallet_file": "ST0B_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0B\\AR00\\EM3100.TIM"
+            }
+        ]
+    },
+    "3220": {
+        "name": "Blue Drache",
+        "textures": [
+            {
+                "image_file": "ST17.BIN",
+                "image_name": "..\\OBJ\\ST17\\AR00\\EM3201.TIM",
+                "pallet_file": "ST17.BIN",
+                "pallet_name": "..\\OBJ\\ST17\\AR00\\EM3201.TIM"
+            }
+        ]
+    },
+    "3320": {
+        "name": "Leopold",
+        "textures": [
+            {
+                "image_file": "ST0A_00.BIN",
+                "image_name": "..\\OBJ\\ST0A\\AR00A\\EM3300.TIM",
+                "pallet_file": "ST0A_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0A\\AR00A\\EM3300.TIM"
+            }
+        ]
+    },
+    "3420": {
+        "name": "Librarian",
+        "textures": [
+            {
+                "image_file": "ST05_02.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR02\\EM3400.TIM",
+                "pallet_file": "ST05_02.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR02\\EM3400.TIM"
+            }
+        ]
+    },
+    "3520": {
+        "name": "Chest",
+        "textures": [
+            {
+                "image_file": "ST00_01.BIN",
+                "image_name": "..\\OBJ\\ST00\\AR01\\EM3500.TIM",
+                "pallet_file": "ST00_01.BIN",
+                "pallet_name": "..\\OBJ\\ST00\\AR01\\EM3500.TIM"
+            }
+        ]
+    },
+    "3620": {
+        "name": "Old City Technician",
+        "textures": [
+            {
+                "image_file": "ST19_03.BIN",
+                "image_name": "..\\OBJ\\ST19\\AR00D\\EM3600.TIM",
+                "pallet_file": "ST19_03.BIN",
+                "pallet_name": "..\\OBJ\\ST19\\AR00D\\EM3600.TIM"
+            }
+        ]
+    },
+    "3660": {
+        "name": "Cloud 0",
+        "textures": [
+            {
+                "image_file": "ST1E.BIN",
+                "image_name": "..\\SCR\\ST1E\\EDKUMO00.TIM",
+                "pallet_file": "ST1E.BIN",
+                "pallet_name": "..\\SCR\\ST1E\\EDKUMO00.TIM"
+            }
+        ]
+    },
+    "3720": {
+        "name": "Sharukurusu",
+        "textures": [
+            {
+                "image_file": "ST09_03.BIN",
+                "image_name": "..\\OBJ\\ST09\\AR00\\EM3700.TIM",
+                "pallet_file": "ST09_03.BIN",
+                "pallet_name": "..\\OBJ\\ST09\\AR00\\EM3700.TIM"
+            }
+        ]
+    },
+    "3820": {
+        "name": "Wily the Boatshop Owner",
+        "textures": [
+            {
+                "image_file": "ST03_07.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR07\\EM3800.TIM",
+                "pallet_file": "ST03_07.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR07\\EM3800.TIM"
+            }
+        ]
+    },
+    "3920": {
+        "name": "Pregnant Woman",
+        "textures": [
+            {
+                "image_file": "ST03_00C.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00B\\EM3900.TIM",
+                "pallet_file": "ST03_00C.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00B\\EM3900.TIM"
+            }
+        ]
+    },
+    "4020": {
+        "name": "Bruno (Top)",
+        "textures": [
+            {
+                "image_file": "ST19_00.BIN",
+                "image_name": "..\\OBJ\\ST19\\AR00\\EM4000N.TIM",
+                "pallet_file": "ST19_00.BIN",
+                "pallet_name": "..\\OBJ\\ST19\\AR00\\EM4000N.TIM"
+            }
+        ]
+    },
+    "4120": {
+        "name": "Bruno (Bottom)",
+        "textures": [
+            {
+                "image_file": "ST19_00.BIN",
+                "image_name": "..\\OBJ\\ST19\\AR00\\EM4100N.TIM",
+                "pallet_file": "ST19_00.BIN",
+                "pallet_name": "..\\OBJ\\ST19\\AR00\\EM4000N.TIM"
+            }
+        ]
+    },
+    "4220": {
+        "name": "Construction Worker",
+        "textures": [
+            {
+                "image_file": "ST04_01.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR01\\EM4200.TIM",
+                "pallet_file": "ST04_01.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR01\\EM4200.TIM"
+            }
+        ]
+    },
+    "4320": {
+        "name": "Gorubesshu",
+        "textures": [
+            {
+                "image_file": "ST09_05.BIN",
+                "image_name": "..\\OBJ\\ST09\\AR00\\EM4300.TIM",
+                "pallet_file": "ST09_05.BIN",
+                "pallet_name": "..\\OBJ\\ST09\\AR00\\EM4300.TIM"
+            }
+        ]
+    },
+    "4420": {
+        "name": "TV Station Receptionist",
+        "textures": [
+            {
+                "image_file": "ST1C.BIN",
+                "image_name": "..\\OBJ\\ST1C\\AR00\\EM4400.TIM",
+                "pallet_file": "ST1C.BIN",
+                "pallet_name": "..\\OBJ\\ST1C\\AR00\\EM4400.TIM"
+            }
+        ]
+    },
+    "4520": {
+        "name": "Artillery the Digger",
+        "textures": [
+            {
+                "image_file": "ST03_00B.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00B\\EM4500.TIM",
+                "pallet_file": "ST03_00B.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00B\\EM4500.TIM"
+            }
+        ]
+    },
+    "4620": {
+        "name": "Hand me a Wrench",
+        "textures": [
+            {
+                "image_file": "ST0D_02.BIN",
+                "image_name": "..\\OBJ\\ST0D\\AR02\\EM4600.TIM",
+                "pallet_file": "ST0D_02.BIN",
+                "pallet_name": "..\\OBJ\\ST0D\\AR02\\EM4600.TIM"
+            }
+        ]
+    },
+    "4720": {
+        "name": "Hipbone Clerk",
+        "textures": [
+            {
+                "image_file": "ST04_00F.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR00F\\EM4700.TIM",
+                "pallet_file": "ST04_00F.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR00F\\EM4700.TIM"
+            }
+        ]
+    },
+    "4820": {
+        "name": "Gai-nee Tooren Segment",
+        "textures": [
+            {
+                "image_file": "ST1D_02.BIN",
+                "image_name": "..\\OBJ\\ST1D\\AR02\\BS1400.TIM",
+                "pallet_file": "ST1D_02.BIN",
+                "pallet_name": "..\\OBJ\\ST1D\\AR02\\BS1400.TIM"
+            }
+        ]
+    },
+    "4920": {
+        "name": "Hipbone Customer",
+        "textures": [
+            {
+                "image_file": "ST03_00C.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00B\\EM4900.TIM",
+                "pallet_file": "ST03_00C.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00B\\EM4900.TIM"
+            }
+        ]
+    },
+    "5020": {
+        "name": "Eisle",
+        "textures": [
+            {
+                "image_file": "ST08_00.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR00A\\EM5000.TIM",
+                "pallet_file": "ST08_00.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR00A\\EM5000.TIM"
+            },
+            {
+                "image_file": "ST08_00.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR00A\\EM5000.TIM",
+                "pallet_file": "ST08_00.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR00A\\EM5001.TIM"
+            }
+        ]
+    },
+    "5320": {
+        "name": "Bank Teller",
+        "textures": [
+            {
+                "image_file": "ST04_04.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR04\\EM5300.TIM",
+                "pallet_file": "ST04_04.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR04\\EM5300.TIM"
+            }
+        ]
+    },
+    "5520": {
+        "name": "Frog",
+        "textures": [
+            {
+                "image_file": "ST0D_00.BIN",
+                "image_name": "..\\OBJ\\ST0D\\AR00\\EM5500.TIM",
+                "pallet_file": "ST0D_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0D\\AR00\\EM5500.TIM"
+            }
+        ]
+    },
+    "5720": {
+        "name": "Karubun 0",
+        "textures": [
+            {
+                "image_file": "ST1A_01.BIN",
+                "image_name": "..\\OBJ\\ST1A\\AR01\\EM5700.TIM",
+                "pallet_file": "ST1A_01.BIN",
+                "pallet_name": "..\\OBJ\\ST1A\\AR01\\EM5700.TIM"
+            }
+        ]
+    },
+    "5820": {
+        "name": "Megaman Juno Core (Broken)",
+        "textures": [
+            {
+                "image_file": "ST1A_02C.BIN",
+                "image_name": "..\\OBJ\\ST1A\\AR02\\BS1300.TIM",
+                "pallet_file": "ST1A_02C.BIN",
+                "pallet_name": "..\\OBJ\\ST1A\\AR02\\BS1300.TIM"
+            },
+            {
+                "image_file": "ST1A_02C.BIN",
+                "image_name": "..\\OBJ\\FACE\\BS1303.TIM",
+                "pallet_file": "ST1A_02C.BIN",
+                "pallet_name": "..\\OBJ\\ST1A\\AR02\\BS1300.TIM"
+            }
+        ]
+    },
+    "5920": {
+        "name": "Gai-nee Tooren Path",
+        "textures": []
+    },
+    "6020": {
+        "name": "Refractor Extractor",
+        "textures": [
+            {
+                "image_file": "ST15_00.BIN",
+                "image_name": "..\\OBJ\\ST15\\AR00\\EM6000.TIM",
+                "pallet_file": "ST15_00.BIN",
+                "pallet_name": "..\\OBJ\\ST15\\AR00\\EM6000.TIM"
+            },
+            {
+                "image_file": "ST15_00.BIN",
+                "image_name": "..\\OBJ\\ST15\\AR00\\EM6000.TIM",
+                "pallet_file": "ST15_00.BIN",
+                "pallet_name": "..\\OBJ\\ST15\\AR00\\EM6001.TIM"
+            },
+            {
+                "image_file": "ST15_00.BIN",
+                "image_name": "..\\OBJ\\ST15\\AR00\\EM6000.TIM",
+                "pallet_file": "ST15_00.BIN",
+                "pallet_name": "..\\OBJ\\ST15\\AR00\\EM6001.TIM"
+            }
+        ]
+    },
+    "6220": {
+        "name": "Cat",
+        "textures": []
+    },
+    "6320": {
+        "name": "Old City Hound",
+        "textures": [
+            {
+                "image_file": "ST19_03.BIN",
+                "image_name": "..\\OBJ\\ST19\\AR00D\\EM6300.TIM",
+                "pallet_file": "ST19_03.BIN",
+                "pallet_name": "..\\OBJ\\ST19\\AR00D\\EM6300.TIM"
+            }
+        ]
+    },
+    "6420": {
+        "name": "Art School Student",
+        "textures": [
+            {
+                "image_file": "ST08_00.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR00A\\EM6400.TIM",
+                "pallet_file": "ST08_00.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR00A\\EM6400.TIM"
+            }
+        ]
+    },
+    "6620": {
+        "name": "Gesellschaft Bow",
+        "textures": [
+            {
+                "image_file": "ST17.BIN",
+                "image_name": "..\\OBJ\\ST17\\AR00\\EM0B00.TIM",
+                "pallet_file": "ST17.BIN",
+                "pallet_name": "..\\OBJ\\ST17\\AR00\\EM0B00.TIM"
+            }
+        ]
+    },
+    "10360": {
+        "name": "Marlwolf Bomb 1",
+        "textures": [
+            {
+                "image_file": "ST0A_00.BIN",
+                "image_name": "..\\OBJ\\ST0A\\AR00A\\BS0100.TIM",
+                "pallet_file": "ST0A_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0A\\AR00A\\BS0100.TIM"
+            }
+        ]
+    },
+    "10460": {
+        "name": "Car 1 (Truck)",
+        "textures": [
+            {
+                "image_file": "ST05_00.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00A\\CA0000.TIM",
+                "pallet_file": "ST05_00.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00A\\CA0000.TIM"
+            }
+        ]
+    },
+    "10820": {
+        "name": "Beast Hunter Man",
+        "textures": [
+            {
+                "image_file": "ST08_03.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR03\\EM5400.TIM",
+                "pallet_file": "ST08_03.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR03\\EM5400.TIM"
+            }
+        ]
+    },
+    "10920": {
+        "name": "Jetlag Bakery Lady",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\EM0900.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\EM0900B.TIM"
+            }
+        ]
+    },
+    "11140": {
+        "name": "Karumuna Bash 1",
+        "textures": [
+            {
+                "image_file": "ST13_00B.BIN",
+                "image_name": "..\\OBJ\\ST13\\AR00\\BS1100.TIM",
+                "pallet_file": "ST13_00B.BIN",
+                "pallet_name": "..\\OBJ\\ST13\\AR00\\BS1101.TIM"
+            }
+        ]
+    },
+    "11320": {
+        "name": "Staple Shop Owner",
+        "textures": [
+            {
+                "image_file": "ST03_00C.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00B\\EM1300.TIM",
+                "pallet_file": "ST03_00C.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00B\\EM1300B.TIM"
+            }
+        ]
+    },
+    "11520": {
+        "name": "Paprika's Owner",
+        "textures": [
+            {
+                "image_file": "ST04_00.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR00A\\EM1500b.TIM",
+                "pallet_file": "ST04_00.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR00A\\EM1500b.TIM"
+            }
+        ]
+    },
+    "11720": {
+        "name": "Nurse with Pigtails",
+        "textures": [
+            {
+                "image_file": "ST08_01.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR01\\EM6500.TIM",
+                "pallet_file": "ST08_01.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR01\\EM6500.TIM"
+            }
+        ]
+    },
+    "12020": {
+        "name": "Maiberu Haagen 1",
+        "textures": [
+            {
+                "image_file": "ST06_02.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR02\\EM2000.TIM",
+                "pallet_file": "ST06_02.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR02\\EM2001.TIM"
+            }
+        ]
+    },
+    "12260": {
+        "name": "Police Car",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\CA0800.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\CA0800.TIM"
+            }
+        ]
+    },
+    "12320": {
+        "name": "Horunisse 1",
+        "textures": [
+            {
+                "image_file": "ST06_02.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR02\\EM2300.TIM",
+                "pallet_file": "ST06_02.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR02\\EM2300A.TIM"
+            }
+        ]
+    },
+    "12660": {
+        "name": "Balloon Fantasy 1",
+        "textures": [
+            {
+                "image_file": "ST08_03.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM",
+                "pallet_file": "ST08_03.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM"
+            }
+        ]
+    },
+    "12720": {
+        "name": "Ship Wheel (Grabbed)",
+        "textures": [
+            {
+                "image_file": "ST02.BIN",
+                "image_name": "..\\OBJ\\ST02\\AR00\\BS0603.TIM",
+                "pallet_file": "ST02.BIN",
+                "pallet_name": "..\\OBJ\\ST02\\AR00\\EM2701.TIM"
+            }
+        ]
+    },
+    "13220": {
+        "name": "Drache",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\SH0C00.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\SH0C00.TIM"
+            }
+        ]
+    },
+    "13660": {
+        "name": "Cloud 1",
+        "textures": [
+            {
+                "image_file": "ST1E.BIN",
+                "image_name": "..\\SCR\\ST1E\\EDKUMO00.TIM",
+                "pallet_file": "ST1E.BIN",
+                "pallet_name": "..\\SCR\\ST1E\\EDKUMO00.TIM"
+            }
+        ]
+    },
+    "15320": {
+        "name": "Salary Man",
+        "textures": [
+            {
+                "image_file": "ST04_02.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR02\\EM5300B.TIM",
+                "pallet_file": "ST04_02.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR02\\EM5300B.TIM"
+            }
+        ]
+    },
+    "15720": {
+        "name": "Karubun 1",
+        "textures": [
+            {
+                "image_file": "ST1A_01.BIN",
+                "image_name": "..\\OBJ\\ST1A\\AR01\\EM5700.TIM",
+                "pallet_file": "ST1A_01.BIN",
+                "pallet_name": "..\\OBJ\\ST1A\\AR01\\EM5701.TIM"
+            }
+        ]
+    },
+    "20360": {
+        "name": "Marlwolf Bomb 2",
+        "textures": [
+            {
+                "image_file": "ST0A_00.BIN",
+                "image_name": "..\\OBJ\\ST0A\\AR00A\\BS0100.TIM",
+                "pallet_file": "ST0A_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0A\\AR00A\\BS0100.TIM"
+            }
+        ]
+    },
+    "20460": {
+        "name": "Car 2",
+        "textures": [
+            {
+                "image_file": "ST05_00.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00A\\CA0000.TIM",
+                "pallet_file": "ST05_00.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00A\\CA0000.TIM"
+            }
+        ]
+    },
+    "20940": {
+        "name": "Tron inside Feldynaught",
+        "textures": [
+            {
+                "image_file": "ST05_01C.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR01\\BS0900.TIM",
+                "pallet_file": "ST05_01C.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR01\\BS0900B.TIM"
+            },
+            {
+                "image_file": "ST05_01C.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR01\\BS0901.TIM",
+                "pallet_file": "ST05_01C.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR01\\BS0900B.TIM"
+            }
+        ]
+    },
+    "21140": {
+        "name": "Karumuna Bash 2",
+        "textures": [
+            {
+                "image_file": "ST13_00B.BIN",
+                "image_name": "..\\OBJ\\ST13\\AR00\\BS1100.TIM",
+                "pallet_file": "ST13_00B.BIN",
+                "pallet_name": "..\\OBJ\\ST13\\AR00\\BS1102.TIM"
+            }
+        ]
+    },
+    "21320": {
+        "name": "NPC Man",
+        "textures": [
+            {
+                "image_file": "ST04_00.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR00A\\EM1300.TIM",
+                "pallet_file": "ST04_00.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR00A\\EM1300c.TIM"
+            }
+        ]
+    },
+    "22320": {
+        "name": "Horunisse 2",
+        "textures": [
+            {
+                "image_file": "ST06_02.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR02\\EM2300.TIM",
+                "pallet_file": "ST06_02.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR02\\EM2300B.TIM"
+            }
+        ]
+    },
+    "22660": {
+        "name": "Balloon Fantasy 2",
+        "textures": [
+            {
+                "image_file": "ST08_03.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM",
+                "pallet_file": "ST08_03.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM"
+            }
+        ]
+    },
+    "25720": {
+        "name": "Karubun 2",
+        "textures": [
+            {
+                "image_file": "ST1A_01.BIN",
+                "image_name": "..\\OBJ\\ST1A\\AR01\\EM5700.TIM",
+                "pallet_file": "ST1A_01.BIN",
+                "pallet_name": "..\\OBJ\\ST1A\\AR01\\EM5702.TIM"
+            }
+        ]
+    },
+    "30360": {
+        "name": "Marlwolf Bomb 3",
+        "textures": [
+            {
+                "image_file": "ST0A_00.BIN",
+                "image_name": "..\\OBJ\\ST0A\\AR00A\\BS0100.TIM",
+                "pallet_file": "ST0A_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0A\\AR00A\\BS0100.TIM"
+            }
+        ]
+    },
+    "30460": {
+        "name": "Car 3",
+        "textures": [
+            {
+                "image_file": "ST05_00.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00A\\CA0000.TIM",
+                "pallet_file": "ST05_00.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00A\\CA0001.TIM"
+            }
+        ]
+    },
+    "31320": {
+        "name": "High Neck Records Owner",
+        "textures": [
+            {
+                "image_file": "ST03_00C.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00B\\EM1300.TIM",
+                "pallet_file": "ST03_00C.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00B\\EM1300.TIM"
+            }
+        ]
+    },
+    "31520": {
+        "name": "NPC Girl (Orange)",
+        "textures": [
+            {
+                "image_file": "ST0C.BIN",
+                "image_name": "..\\OBJ\\ST0C\\AR00A\\EM1500D.TIM",
+                "pallet_file": "ST0C.BIN",
+                "pallet_name": "..\\OBJ\\ST0C\\AR00A\\EM1500D.TIM"
+            }
+        ]
+    },
+    "32660": {
+        "name": "Balloon Fantasy 3",
+        "textures": [
+            {
+                "image_file": "ST08_03.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM",
+                "pallet_file": "ST08_03.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM"
+            }
+        ]
+    },
+    "40460": {
+        "name": "Car 4",
+        "textures": [
+            {
+                "image_file": "ST05_00.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00A\\CA0000.TIM",
+                "pallet_file": "ST05_00.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00A\\CA0001.TIM"
+            }
+        ]
+    },
+    "41320": {
+        "name": "NPC Man",
+        "textures": [
+            {
+                "image_file": "ST04_00.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR00A\\EM1300.TIM",
+                "pallet_file": "ST04_00.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR00A\\EM1300b.TIM"
+            }
+        ]
+    },
+    "42660": {
+        "name": "Balloon Fantasy 4",
+        "textures": [
+            {
+                "image_file": "ST08_03.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM",
+                "pallet_file": "ST08_03.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM"
+            }
+        ]
+    },
+    "50460": {
+        "name": "Car 5",
+        "textures": [
+            {
+                "image_file": "ST05_00.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00A\\CA0000.TIM",
+                "pallet_file": "ST05_00.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00A\\CA0001.TIM"
+            }
+        ]
+    },
+    "51320": {
+        "name": "Bronte Vegitable Shop Owner",
+        "textures": [
+            {
+                "image_file": "ST03_00B.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00B\\EM1300C.TIM",
+                "pallet_file": "ST03_00B.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00B\\EM1300C.TIM"
+            }
+        ]
+    },
+    "52660": {
+        "name": "Balloon Fantasy 5",
+        "textures": [
+            {
+                "image_file": "ST08_03.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM",
+                "pallet_file": "ST08_03.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM"
+            }
+        ]
+    },
+    "60460": {
+        "name": "Car 6 (School Bus)",
+        "textures": [
+            {
+                "image_file": "ST05_00.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00A\\CA0601.TIM",
+                "pallet_file": "ST05_00.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00A\\CA0601.TIM"
+            }
+        ]
+    },
+    "62660": {
+        "name": "Balloon Fantasy 6",
+        "textures": [
+            {
+                "image_file": "ST08_03.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM",
+                "pallet_file": "ST08_03.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM"
+            }
+        ]
+    },
+    "72660": {
+        "name": "Balloon Fantasy 7",
+        "textures": [
+            {
+                "image_file": "ST08_03.BIN",
+                "image_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM",
+                "pallet_file": "ST08_03.BIN",
+                "pallet_name": "..\\OBJ\\ST08\\AR03\\BALLOON.TIM"
+            }
+        ]
+    },
+    "80460": {
+        "name": "Police Car",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\CA0800.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\CA0800.TIM"
+            }
+        ]
+    },
+    "a20": {
+        "name": "Flutter",
+        "textures": [
+            {
+                "image_file": "ST00_04.BIN",
+                "image_name": "..\\OBJ\\ST00\\AR04\\EM0A00.TIM",
+                "pallet_file": "ST00_04.BIN",
+                "pallet_name": "..\\OBJ\\ST00\\AR04\\EM0A00.TIM"
+            }
+        ]
+    },
+    "b20": {
+        "name": "Gesellschaft",
+        "textures": [
+            {
+                "image_file": "ST06_02.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR02\\EM0B00.TIM",
+                "pallet_file": "ST06_02.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR02\\EM0B00.TIM"
+            }
+        ]
+    },
+    "a40": {
+        "name": "Bon Bonne (Legs)",
+        "textures": [
+            {
+                "image_file": "ST17C.BIN",
+                "image_name": "..\\OBJ\\ST17\\AR00\\BS0A00.TIM",
+                "pallet_file": "ST17C.BIN",
+                "pallet_name": "..\\OBJ\\ST17\\AR00\\BS0A00.TIM"
+            }
+        ]
+    },
+    "c60": {
+        "name": "Drache",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\SH0C00.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\SH0C00.TIM"
+            }
+        ]
+    },
+    "b40": {
+        "name": "Teisel Bonne (Cutscene)",
+        "textures": [
+            {
+                "image_file": "ST06_03.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR03\\BS0B00.TIM",
+                "pallet_file": "ST06_03.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR03\\BS0B00.TIM"
+            },
+            {
+                "image_file": "ST06_03.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR03\\BS0B00.TIM",
+                "pallet_file": "ST06_03.BIN",
+                "pallet_name": "..\\OBJ\\FACE\\BS0B03.TIM"
+            },
+            {
+                "image_file": "ST06_03.BIN",
+                "image_name": "..\\OBJ\\FACE\\BS0B03.TIM",
+                "pallet_file": "ST06_03.BIN",
+                "pallet_name": "..\\OBJ\\FACE\\BS0B03.TIM"
+            }
+        ]
+    },
+    "c40": {
+        "name": "Barukon Gelede",
+        "textures": [
+            {
+                "image_file": "ST0B_00.BIN",
+                "image_name": "..\\OBJ\\ST0B\\AR00\\BS0C00.TIM",
+                "pallet_file": "ST0B_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0B\\AR00\\BS0C00.TIM"
+            }
+        ]
+    },
+    "d20": {
+        "name": "Osh",
+        "textures": [
+            {
+                "image_file": "ST04_00.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR00A\\EM0d00.TIM",
+                "pallet_file": "ST04_00.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR00A\\EM0d00.TIM"
+            }
+        ]
+    },
+    "d40": {
+        "name": "Bon Bonne (Flying)",
+        "textures": [
+            {
+                "image_file": "ST06_02.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR02\\BS0D00.TIM",
+                "pallet_file": "ST06_02.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR02\\BS0D00.TIM"
+            }
+        ]
+    },
+    "e20": {
+        "name": "Orudakoitan",
+        "textures": [
+            {
+                "image_file": "ST09_00.BIN",
+                "image_name": "..\\OBJ\\ST09\\AR00\\EM0e00.TIM",
+                "pallet_file": "ST09_00.BIN",
+                "pallet_name": "..\\OBJ\\ST09\\AR00\\EM0200.TIM"
+            }
+        ]
+    },
+    "e40": {
+        "name": "Wily the Boatshop Owner",
+        "textures": [
+            {
+                "image_file": "ST0D_02.BIN",
+                "image_name": "..\\OBJ\\ST0D\\AR02\\EM3800.TIM",
+                "pallet_file": "ST0D_02.BIN",
+                "pallet_name": "..\\OBJ\\ST0D\\AR02\\EM3800.TIM"
+            },
+            {
+                "image_file": "ST0D_02.BIN",
+                "image_name": "..\\OBJ\\FACE\\EM3801.TIM",
+                "pallet_file": "ST0D_02.BIN",
+                "pallet_name": "..\\OBJ\\ST0D\\AR02\\EM3800.TIM"
+            }
+        ]
+    },
+    "e60": {
+        "name": "Police Car",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\CA0800.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\CA0800.TIM"
+            }
+        ]
+    },
+    "2d60": {
+        "name": "Police Car",
+        "textures": [
+            {
+                "image_file": "ST03_00.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00A\\CA0800.TIM",
+                "pallet_file": "ST03_00.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00A\\CA0800.TIM"
+            }
+        ]
+    },
+    "f20": {
+        "name": "Jim",
+        "textures": [
+            {
+                "image_file": "ST04_00.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR00A\\EM0f00.TIM",
+                "pallet_file": "ST04_00.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR00A\\EM0f00.TIM"
+            }
+        ]
+    },
+    "f40": {
+        "name": "Fokkerwolf",
+        "textures": [
+            {
+                "image_file": "ST17C.BIN",
+                "image_name": "..\\OBJ\\ST17\\AR00\\BS0F00.TIM",
+                "pallet_file": "ST17C.BIN",
+                "pallet_name": "..\\OBJ\\ST17\\AR00\\BS0F00.TIM"
+            }
+        ]
+    },
+    "1a20": {
+        "name": "Blumebear Cockpit 0",
+        "textures": [
+            {
+                "image_file": "ST05_01.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR01\\EM1a00.TIM",
+                "pallet_file": "ST05_01.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR01\\EM1a00.TIM"
+            }
+        ]
+    },
+    "11a20": {
+        "name": "Blumebear Cockpit 1",
+        "textures": [
+            {
+                "image_file": "ST05_01.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR01\\EM1a00.TIM",
+                "pallet_file": "ST05_01.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR01\\EM1a01.TIM"
+            }
+        ]
+    },
+    "21a20": {
+        "name": "Blumebear Cockpit 2",
+        "textures": [
+            {
+                "image_file": "ST05_01.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR01\\EM1a00.TIM",
+                "pallet_file": "ST05_01.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR01\\EM1a02.TIM"
+            }
+        ]
+    },
+    "31a20": {
+        "name": "Blumebear Cockpit 3",
+        "textures": [
+            {
+                "image_file": "ST0CB.BIN",
+                "image_name": "..\\OBJ\\ST0C\\AR00B\\EM1A03.TIM",
+                "pallet_file": "ST0CB.BIN",
+                "pallet_name": "..\\OBJ\\ST0C\\AR00B\\EM3B00.TIM"
+            }
+        ]
+    },
+    "1a60": {
+        "name": "Foo-Roo",
+        "textures": [
+            {
+                "image_file": "ST09_05.BIN",
+                "image_name": "..\\OBJ\\ST09\\AR00\\SH1A00.TIM",
+                "pallet_file": "ST09_05.BIN",
+                "pallet_name": "..\\OBJ\\ST09\\AR00\\SH1A00.TIM"
+            }
+        ]
+    },
+    "1b20": {
+        "name": "Ira Walking",
+        "textures": [
+            {
+                "image_file": "ST05_00J.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00J\\EM1B00.TIM",
+                "pallet_file": "ST05_00J.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00J\\EM1B00.TIM"
+            }
+        ]
+    },
+    "1c20": {
+        "name": "Blumebear Tread 0",
+        "textures": [
+            {
+                "image_file": "ST05_01.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR01\\EM1a00.TIM",
+                "pallet_file": "ST05_01.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR01\\EM1a00.TIM"
+            }
+        ]
+    },
+    "11c20": {
+        "name": "Blumebear Tread 1",
+        "textures": [
+            {
+                "image_file": "ST05_01.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR01\\EM1a00.TIM",
+                "pallet_file": "ST05_01.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR01\\EM1a01.TIM"
+            }
+        ]
+    },
+    "21c20": {
+        "name": "Blumebear Tread 2",
+        "textures": [
+            {
+                "image_file": "ST05_01.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR01\\EM1a00.TIM",
+                "pallet_file": "ST05_01.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR01\\EM1a02.TIM"
+            }
+        ]
+    },
+    "31c20": {
+        "name": "Blumebear Tread 3",
+        "textures": [
+            {
+                "image_file": "ST0CB.BIN",
+                "image_name": "..\\OBJ\\ST0C\\AR00B\\EM1A03.TIM",
+                "pallet_file": "ST0CB.BIN",
+                "pallet_name": "..\\OBJ\\ST0C\\AR00B\\EM3B00.TIM"
+            }
+        ]
+    },
+    "1d20": {
+        "name": "Seagull",
+        "textures": [
+            {
+                "image_file": "ST00_04.BIN",
+                "image_name": "..\\OBJ\\ST00\\AR04\\EM1D00.TIM",
+                "pallet_file": "ST00_04.BIN",
+                "pallet_name": "..\\OBJ\\ST00\\AR04\\EM1D00.TIM"
+            }
+        ]
+    },
+    "1f20": {
+        "name": "Horokko (wall)",
+        "textures": [
+            {
+                "image_file": "ST00_01.BIN",
+                "image_name": "..\\OBJ\\ST00\\AR01\\EM0300.TIM",
+                "pallet_file": "ST00_01.BIN",
+                "pallet_name": "..\\OBJ\\ST00\\AR01\\EM0300.TIM"
+            }
+        ]
+    },
+    "2a20": {
+        "name": "Paprika",
+        "textures": [
+            {
+                "image_file": "ST04_00.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR00A\\EM2a00.TIM",
+                "pallet_file": "ST04_00.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR00A\\EM2a00.TIM"
+            }
+        ]
+    },
+    "2b20": {
+        "name": "Bon Bonne with Legs",
+        "textures": [
+            {
+                "image_file": "ST07_00.BIN",
+                "image_name": "..\\OBJ\\ST07\\AR00\\EM2B00.TIM",
+                "pallet_file": "ST07_00.BIN",
+                "pallet_name": "..\\OBJ\\ST07\\AR00\\EM2B00.TIM"
+            }
+        ]
+    },
+    "2c20": {
+        "name": "Zuuf Geleido Yellow",
+        "textures": [
+            {
+                "image_file": "ST0B_00.BIN",
+                "image_name": "..\\OBJ\\ST0B\\AR00\\EM2C00.TIM",
+                "pallet_file": "ST0B_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0B\\AR00\\EM2C00.TIM"
+            }
+        ]
+    },
+    "12c20": {
+        "name": "Zuuf Geleido Purple",
+        "textures": [
+            {
+                "image_file": "ST0B_00.BIN",
+                "image_name": "..\\OBJ\\ST0B\\AR00\\EM2C00.TIM",
+                "pallet_file": "ST0B_00.BIN",
+                "pallet_name": "..\\OBJ\\ST0B\\AR00\\EM2C001.TIM"
+            }
+        ]
+    },
+    "2d20": {
+        "name": "Reporter",
+        "textures": [
+            {
+                "image_file": "ST03_00C.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00B\\EM2D00.TIM",
+                "pallet_file": "ST03_00C.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00B\\EM2D00.TIM"
+            }
+        ]
+    },
+    "2e20": {
+        "name": "Bon Bonne Tongue",
+        "textures": [
+            {
+                "image_file": "ST06_02.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR02\\BS0D00.TIM",
+                "pallet_file": "ST06_02.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR02\\BS0D00.TIM"
+            }
+        ]
+    },
+    "2f20": {
+        "name": "Bon Bonne Head",
+        "textures": [
+            {
+                "image_file": "ST06_02.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR02\\SH1000.TIM",
+                "pallet_file": "ST06_02.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR02\\BS0D00.TIM"
+            }
+        ]
+    },
+    "3a20": {
+        "name": "Homework Girl",
+        "textures": [
+            {
+                "image_file": "ST04_00E.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR00E\\EM3a00.TIM",
+                "pallet_file": "ST04_00E.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR00E\\EM3a00.TIM"
+            }
+        ]
+    },
+    "38e0": {
+        "name": "Junk",
+        "textures": []
+    },
+    "3b20": {
+        "name": "Gun Battery",
+        "textures": [
+            {
+                "image_file": "ST0CB.BIN",
+                "image_name": "..\\OBJ\\ST0C\\AR00B\\EM3B00.TIM",
+                "pallet_file": "ST0CB.BIN",
+                "pallet_name": "..\\OBJ\\ST0C\\AR00B\\EM3B00.TIM"
+            }
+        ]
+    },
+    "3d20": {
+        "name": "Kuruguru",
+        "textures": [
+            {
+                "image_file": "ST09_05.BIN",
+                "image_name": "..\\OBJ\\ST09\\AR00\\EM3D00.TIM",
+                "pallet_file": "ST09_05.BIN",
+                "pallet_name": "..\\OBJ\\ST09\\AR00\\EM3D00.TIM"
+            }
+        ]
+    },
+    "3e20": {
+        "name": "Jakko",
+        "textures": [
+            {
+                "image_file": "ST0CB.BIN",
+                "image_name": "..\\OBJ\\ST0C\\AR00B\\EM3E00.TIM",
+                "pallet_file": "ST0CB.BIN",
+                "pallet_name": "..\\OBJ\\ST0C\\AR00B\\EM3E00.TIM"
+            }
+        ]
+    },
+    "3f20": {
+        "name": "News Caster",
+        "textures": [
+            {
+                "image_file": "ST04_05.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR05\\EM3F00.TIM",
+                "pallet_file": "ST04_05.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR05\\EM3F00.TIM"
+            }
+        ]
+    },
+    "1d60": {
+        "name": "Bruno Missile",
+        "textures": [
+            {
+                "image_file": "ST19_00.BIN",
+                "image_name": "..\\OBJ\\ST19\\AR00\\EM4100N.TIM",
+                "pallet_file": "ST19_00.BIN",
+                "pallet_name": "..\\OBJ\\ST19\\AR00\\EM4000N.TIM"
+            }
+        ]
+    },
+    "4a20": {
+        "name": "Museum Curator",
+        "textures": [
+            {
+                "image_file": "ST05_00J.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00J\\EM4A00.TIM",
+                "pallet_file": "ST05_00J.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00J\\EM4A00.TIM"
+            }
+        ]
+    },
+    "4b20": {
+        "name": "Firushudot",
+        "textures": [
+            {
+                "image_file": "ST14_00.BIN",
+                "image_name": "..\\OBJ\\ST14\\AR00\\EM4B00.TIM",
+                "pallet_file": "ST14_00.BIN",
+                "pallet_name": "..\\OBJ\\ST14\\AR00\\EM4B00.TIM"
+            }
+        ]
+    },
+    "4c20": {
+        "name": "Sitting Old Woman",
+        "textures": [
+            {
+                "image_file": "ST04_00B.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR00B\\EM4c00.TIM",
+                "pallet_file": "ST04_00B.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR00B\\EM4c00.TIM"
+            }
+        ]
+    },
+    "4d20": {
+        "name": "Ira in Wheel Chair",
+        "textures": [
+            {
+                "image_file": "ST05_00J.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00J\\EM4D00.TIM",
+                "pallet_file": "ST05_00J.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00J\\EM4D00.TIM"
+            }
+        ]
+    },
+    "4f20": {
+        "name": "Gesellschaft Cannons",
+        "textures": [
+            {
+                "image_file": "ST17.BIN",
+                "image_name": "..\\OBJ\\ST17\\AR00\\EM4F00.TIM",
+                "pallet_file": "ST17.BIN",
+                "pallet_name": "..\\OBJ\\ST17\\AR00\\EM4F00.TIM"
+            }
+        ]
+    },
+    "4e20": {
+        "name": "Butterfly",
+        "textures": []
+    },
+    "5b20": {
+        "name": "Megaman Juno Core",
+        "textures": [
+            {
+                "image_file": "ST1A_01B.BIN",
+                "image_name": "..\\OBJ\\ST1A\\AR01\\BS1300.TIM",
+                "pallet_file": "ST1A_01B.BIN",
+                "pallet_name": "..\\OBJ\\ST1A\\AR01\\BS1300.TIM"
+            },
+            {
+                "image_file": "ST1A_01B.BIN",
+                "image_name": "..\\OBJ\\FACE\\BS1304.TIM",
+                "pallet_file": "ST1A_01B.BIN",
+                "pallet_name": "..\\OBJ\\ST1A\\AR01\\BS1300.TIM"
+            }
+        ]
+    },
+    "5c20": {
+        "name": "Kattelox TV Camera Man",
+        "textures": [
+            {
+                "image_file": "ST1E.BIN",
+                "image_name": "..\\OBJ\\ST1E\\AR00\\EM5C00.TIM",
+                "pallet_file": "ST1E.BIN",
+                "pallet_name": "..\\OBJ\\ST1E\\AR00\\EM5C00.TIM"
+            }
+        ]
+    },
+    "5d20": {
+        "name": "Data the Monkey",
+        "textures": [
+            {
+                "image_file": "EXIT_MAP.BIN",
+                "image_name": "..\\BG\\CHAR\\GAUGE01u.TIM",
+                "pallet_file": "ST1A_02D.BIN",
+                "pallet_name": "..\\OBJ\\FACE\\EM5D01.TIM"
+            },
+            {
+                "image_file": "ST1A_02D.BIN",
+                "image_name": "..\\OBJ\\FACE\\EM5D01.TIM",
+                "pallet_file": "ST1A_02D.BIN",
+                "pallet_name": "..\\OBJ\\FACE\\EM5D01.TIM"
+            }
+        ]
+    },
+    "5e20": {
+        "name": "NPC Woman",
+        "textures": [
+            {
+                "image_file": "ST04_02.BIN",
+                "image_name": "..\\OBJ\\ST04\\AR02\\EM0900.TIM",
+                "pallet_file": "ST04_02.BIN",
+                "pallet_name": "..\\OBJ\\ST04\\AR02\\EM0900.TIM"
+            }
+        ]
+    },
+    "5f20": {
+        "name": "Bon Bonne (with Floaty)",
+        "textures": [
+            {
+                "image_file": "ST15_00.BIN",
+                "image_name": "..\\OBJ\\ST15\\AR00\\EM5F00.TIM",
+                "pallet_file": "ST15_00.BIN",
+                "pallet_name": "..\\OBJ\\ST15\\AR00\\EM5F00.TIM"
+            }
+        ]
+    },
+    "15e20": {
+        "name": "NPC Woman (Purple)",
+        "textures": [
+            {
+                "image_file": "ST03_00B.BIN",
+                "image_name": "..\\OBJ\\ST03\\AR00B\\EM0900B.TIM",
+                "pallet_file": "ST03_00B.BIN",
+                "pallet_name": "..\\OBJ\\ST03\\AR00B\\EM0900B.TIM"
+            }
+        ]
+    },
+    "1f60": {
+        "name": "Red Traffic Cone 0",
+        "textures": [
+            {
+                "image_file": "ST05_00C.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00C\\CORN.TIM",
+                "pallet_file": "ST05_00C.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00C\\CORN.TIM"
+            }
+        ]
+    },
+    "11f60": {
+        "name": "Red Traffic Cone 1",
+        "textures": [
+            {
+                "image_file": "ST05_00C.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00C\\CORN.TIM",
+                "pallet_file": "ST05_00C.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00C\\CORN.TIM"
+            }
+        ]
+    },
+    "21f60": {
+        "name": "Red Traffic Cone 2",
+        "textures": [
+            {
+                "image_file": "ST05_00C.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00C\\CORN.TIM",
+                "pallet_file": "ST05_00C.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00C\\CORN.TIM"
+            }
+        ]
+    },
+    "31f60": {
+        "name": "Red Traffic Cone 3",
+        "textures": [
+            {
+                "image_file": "ST05_00C.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00C\\CORN.TIM",
+                "pallet_file": "ST05_00C.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00C\\CORN.TIM"
+            }
+        ]
+    },
+    "41f60": {
+        "name": "Red Traffic Cone 4",
+        "textures": [
+            {
+                "image_file": "ST05_00C.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR00C\\CORN.TIM",
+                "pallet_file": "ST05_00C.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR00C\\CORN.TIM"
+            }
+        ]
+    },
+    "d60": {
+        "name": "City Gate Key",
+        "textures": [
+            {
+                "image_file": "ST05_01.BIN",
+                "image_name": "..\\OBJ\\ST05\\AR01\\KEY.TIM",
+                "pallet_file": "ST05_01.BIN",
+                "pallet_name": "..\\OBJ\\ST05\\AR01\\KEY.TIM"
+            }
+        ]
+    },
+    "f60": {
+        "name": "KTOX TV Blimp",
+        "textures": [
+            {
+                "image_file": "ST06_02.BIN",
+                "image_name": "..\\OBJ\\ST06\\AR02\\SH0F00.TIM",
+                "pallet_file": "ST06_02.BIN",
+                "pallet_name": "..\\OBJ\\ST06\\AR02\\SH0F00.TIM"
+            }
+        ]
+    },
+    "b60": {
+        "name": "Rotating Trap",
+        "textures": [
+            {
+                "image_file": "ST09_03.BIN",
+                "image_name": "..\\OBJ\\ST09\\AR00\\SH0B00.TIM",
+                "pallet_file": "ST09_03.BIN",
+                "pallet_name": "..\\OBJ\\ST09\\AR00\\SH0B00.TIM"
+            }
+        ]
+    },
+    "1e60": {
+        "name": "Jakko Nest",
+        "textures": [
+            {
+                "image_file": "ST0E.BIN",
+                "image_name": "..\\OBJ\\ST0E\\AR00\\EM3E00.TIM",
+                "pallet_file": "ST0E.BIN",
+                "pallet_name": "..\\OBJ\\ST0E\\AR00\\EM3E00.TIM"
+            }
+        ]
+    },
+    "1b60": {
+        "name": "Trash Compactor",
+        "textures": [
+            {
+                "image_file": "ST0E.BIN",
+                "image_name": "..\\OBJ\\ST0E\\AR00\\ROLLER.TIM",
+                "pallet_file": "ST0E.BIN",
+                "pallet_name": "..\\OBJ\\ST0E\\AR00\\ROLLER.TIM"
+            }
+        ]
+    },
+    "11c60": {
+        "name": "Ice Platform 1",
+        "textures": [
+            {
+                "image_file": "ST0E.BIN",
+                "image_name": "..\\SCR\\st0e\\md700.TIM",
+                "pallet_file": "ST0E.BIN",
+                "pallet_name": "..\\SCR\\st0e\\md700.TIM"
+            }
+        ]
+    },
+    "21c60": {
+        "name": "Ice Platform 2",
+        "textures": [
+            {
+                "image_file": "ST0E.BIN",
+                "image_name": "..\\SCR\\st0e\\md700.TIM",
+                "pallet_file": "ST0E.BIN",
+                "pallet_name": "..\\SCR\\st0e\\md700.TIM"
+            }
+        ]
+    },
+    "31c60": {
+        "name": "Trash Tread Door (Left)",
+        "textures": [
+            {
+                "image_file": "ST0E.BIN",
+                "image_name": "..\\SCR\\st0e\\md700.TIM",
+                "pallet_file": "ST0E.BIN",
+                "pallet_name": "..\\SCR\\st0e\\md710c.TIM"
+            }
+        ]
+    },
+    "41c60": {
+        "name": "Trash Tread Cover",
+        "textures": [
+            {
+                "image_file": "ST0E.BIN",
+                "image_name": "..\\SCR\\st0e\\md700.TIM",
+                "pallet_file": "ST0E.BIN",
+                "pallet_name": "..\\SCR\\st0e\\md750c.TIM"
+            }
+        ]
+    },
+    "51c60": {
+        "name": "Trash Tread Door (Right)",
+        "textures": [
+            {
+                "image_file": "ST0E.BIN",
+                "image_name": "..\\SCR\\st0e\\md700.TIM",
+                "pallet_file": "ST0E.BIN",
+                "pallet_name": "..\\SCR\\st0e\\md720c.TIM"
+            }
+        ]
+    },
+    "61c60": {
+        "name": "Pressure Switch",
+        "textures": [
+            {
+                "image_file": "ST0E.BIN",
+                "image_name": "..\\SCR\\st0e\\md700.TIM",
+                "pallet_file": "ST0E.BIN",
+                "pallet_name": "..\\SCR\\st0e\\md730c.TIM"
+            }
+        ]
+    },
+    "81c60": {
+        "name": "Bridge",
+        "textures": [
+            {
+                "image_file": "ST0E.BIN",
+                "image_name": "..\\SCR\\st0e\\md700.TIM",
+                "pallet_file": "ST0E.BIN",
+                "pallet_name": "..\\SCR\\st0e\\md710c.TIM"
+            }
+        ]
+    },
+    "5a20": {
+        "name": "Eden",
+        "textures": [
+            {
+                "image_file": "ST1A_02.BIN",
+                "image_name": "..\\OBJ\\ST1A\\AR02\\EM5A00.TIM",
+                "pallet_file": "ST1A_02.BIN",
+                "pallet_name": "..\\OBJ\\ST1A\\AR02\\EM5A00.TIM"
+            }
+        ]
+    }
+}
