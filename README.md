@@ -3,7 +3,7 @@
 
 > **Note**: This project is currently a **Work in Progress**.
 
-![MML Maya Tool Screenshot](images/mml1-1.png)
+![MML Maya Tool Screenshot](images/megaman.gif)
 
 A purely Python-based asset pipeline tool for importing **Mega Man Legends (PS1)** assets into Autodesk Maya. This toolset bridges the gap between retro console formats and modern DCC applications, focusing on accurate preservation of the original "action figure" segmentation and animation style.
 
