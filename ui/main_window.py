@@ -31,8 +31,8 @@ from MML.parsers.tim2png import read_mml_tim, render_composite_texture
 from MML.parsers.bin_reader import MMLBinReader, MMLAsset
 from MML.core.maya_importer import MMLMayaImporter
 from MML.ui.preview_widget import AssetPreviewWidget
-from MML.core.workspace import MMLWorkspace
-from MML.core.texture_database import TextureDatabase, get_texture_database
+from MML.core.data.workspace import MMLWorkspace
+from MML.core.data.texture_database import TextureDatabase, get_texture_database
 
 
 def get_maya_main_window():
