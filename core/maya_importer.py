@@ -23,7 +23,7 @@ import maya.api.OpenMaya as om
 from MML.parsers.ebd2fbx import EBDReader
 from MML.parsers.tim2png import read_mml_tim
 
-print("MML Maya Importer this is new")
+
 
 class MMLMayaImporter:
     """Import MML assets into Maya."""
@@ -718,7 +718,10 @@ class MMLMayaImporter:
             bone_rots = frame.get('bone_rotations', [])
             
             for bone_idx, joint in joint_dict.items():
-                # Apply rotation from bone_rotations list (values already in degrees)
+                # Set Rotation Order to ZYX (5) to minimize Gimbal Lock and match game conventions
+                if frame_idx == 0:
+                     cmds.setAttr(f'{joint}.rotateOrder', 5)
+
                 if bone_idx < len(bone_rots):
                     rot = bone_rots[bone_idx]
                     rx = rot[0]
@@ -740,7 +743,8 @@ class MMLMayaImporter:
                     cmds.setKeyframe(joint, attribute='translateY', value=ty, time=frame_idx)
                     cmds.setKeyframe(joint, attribute='translateZ', value=tz, time=frame_idx)
         
-        print(f"Applied animation {anim_index} ({len(frames)} frames) to {len(joint_dict)} joints")
+        print(f"Applied animation {anim_index} ({len(frames)} frames) to {len(joint_dict)} joints (RotateOrder: ZYX)")
+
         return True
     
     @classmethod

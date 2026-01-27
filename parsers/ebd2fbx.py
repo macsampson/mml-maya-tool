@@ -476,6 +476,7 @@ class FBXExporter:
                     "local_translation": local_trans,
                     "world_position": my_world,
                     "render_index": render_idx,
+                    "anim_bone_index": limb_info["bone_index"],
                 }
             )
 
@@ -1069,11 +1070,15 @@ class FBXExporter:
                             f.write(f"\t\tKeyValueFloat: *{num_frames} {{\n")
                             f.write("\t\t\ta: ")
                             values = []
+                            
+                            # Get the correct animation track index for this bone (limb)
+                            anim_track_idx = bone.get("anim_bone_index", bone_idx)
+                            
                             for frame_idx, frame in enumerate(frames):
                                 # Get rotation value for this bone from bone_rotations list
                                 bone_rots = frame.get("bone_rotations", [])
-                                if bone_idx < len(bone_rots):
-                                    rot = bone_rots[bone_idx]
+                                if anim_track_idx < len(bone_rots):
+                                    rot = bone_rots[anim_track_idx]
                                     # Values are already in degrees!
                                     degrees = rot[axis_idx] if axis_idx < len(rot) else 0
                                     # Apply Y and Z negation like DashViewer
@@ -1107,9 +1112,23 @@ class FBXExporter:
                                 f.write(f"\t\tKeyValueFloat: *{num_frames} {{\n")
                                 f.write("\t\t\ta: ")
                                 values = []
+                                # Get bind pose translation for this bone
+                                bind_ty = 0.0
+                                if axis_idx == 1:  # Y axis
+                                    for b in bones:
+                                        if b["index"] == bone_idx:
+                                            # local_translation is (tx, ty, tz)
+                                            bind_ty = b["local_translation"][1]
+                                            break
+
                                 for frame_idx, frame in enumerate(frames):
                                     trans = frame.get("root_translation", (0, 0, 0))
                                     val = trans[axis_idx] * scale if axis_idx < len(trans) else 0
+                                    
+                                    # Add bind pose Y to animation Y (DashViewer behavior)
+                                    if axis_idx == 1:
+                                        val += bind_ty
+                                        
                                     values.append(f"{val:.6f}")
                                 f.write(",".join(values))
                                 f.write("\n\t\t}\n")
