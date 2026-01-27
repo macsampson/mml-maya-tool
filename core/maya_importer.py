@@ -10,7 +10,8 @@ import sys
 import tempfile
 
 # Add parent directory to path for imports
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) if '__file__' in dir() else r"o:\Desktop\MML"
+# Add parent directory to path for imports
+SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) if '__file__' in dir() else r"o:\Desktop\MML"
 if SCRIPT_DIR not in sys.path:
     sys.path.insert(0, SCRIPT_DIR)
 
@@ -19,8 +20,8 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om
 
 # Import existing parsers
-from MML.mml_ebd2fbx import EBDReader
-from MML.mml_tim2png import read_mml_tim
+from MML.parsers.ebd2fbx import EBDReader
+from MML.parsers.tim2png import read_mml_tim
 
 print("MML Maya Importer this is new")
 

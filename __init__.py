@@ -5,12 +5,12 @@ MML Maya Package
 Import Mega Man Legends assets into Autodesk Maya.
 """
 
-from .bin_reader import MMLAsset, MMLBinReader
-from .maya_importer import MMLMayaImporter
-from .preview_widget import AssetPreviewWidget
-from .ui import MMLImporterUI, show_mml_importer
-from .mml_ebd2fbx import EBDReader, FBXExporter
-from .mml_tim2png import read_mml_tim
+from .parsers.bin_reader import MMLAsset, MMLBinReader
+from .core.maya_importer import MMLMayaImporter
+from .ui.preview_widget import AssetPreviewWidget
+from .ui.main_window import MMLImporterUI, show_mml_importer
+from .parsers.ebd2fbx import EBDReader, FBXExporter
+from .parsers.tim2png import read_mml_tim
 
 __all__ = [
     'MMLAsset',

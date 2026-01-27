@@ -10,7 +10,8 @@ import sys
 import tempfile
 
 # Add parent directory to path for imports
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) if '__file__' in dir() else r"o:\Desktop\MML"
+# Add parent directory to path for imports
+SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) if '__file__' in dir() else r"o:\Desktop\MML"
 if SCRIPT_DIR not in sys.path:
     sys.path.insert(0, SCRIPT_DIR)
 
@@ -23,15 +24,15 @@ from PySide2 import QtWidgets, QtCore, QtGui
 from shiboken2 import wrapInstance
 
 # Import existing parsers
-from MML.mml_ebd2fbx import EBDReader
-from MML.mml_tim2png import read_mml_tim, render_composite_texture
+from MML.parsers.ebd2fbx import EBDReader
+from MML.parsers.tim2png import read_mml_tim, render_composite_texture
 
 # Internal imports
-from MML.bin_reader import MMLBinReader, MMLAsset
-from MML.maya_importer import MMLMayaImporter
-from MML.preview_widget import AssetPreviewWidget
-from MML.workspace import MMLWorkspace
-from MML.texture_database import TextureDatabase, get_texture_database
+from MML.parsers.bin_reader import MMLBinReader, MMLAsset
+from MML.core.maya_importer import MMLMayaImporter
+from MML.ui.preview_widget import AssetPreviewWidget
+from MML.core.workspace import MMLWorkspace
+from MML.core.texture_database import TextureDatabase, get_texture_database
 
 
 def get_maya_main_window():

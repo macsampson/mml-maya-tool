@@ -8,7 +8,7 @@ texture lookups where image data and palette data may come from different files.
 
 import os
 from typing import Dict, List, Optional, Tuple
-from MML.bin_reader import MMLBinReader, MMLAsset
+from MML.parsers.bin_reader import MMLBinReader, MMLAsset
 
 
 class MMLWorkspace:
