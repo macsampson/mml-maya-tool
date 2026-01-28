@@ -5,7 +5,7 @@
 
 ![MML Maya Tool Screenshot](images/megaman.gif)
 
-A Python-based asset pipeline toolset for importing **Mega Man Legends (PS1)** assets into Maya. This is mainly a legacy systems research project thats built upon the awesome work of @kion-dgl (The GOAT of MML reverse engineering).
+A Python-based asset tool for importing **Mega Man Legends (PS1)** assets into Maya. This is mainly a legacy systems research project thats built upon the awesome work of @kion-dgl (The GOAT of MML reverse engineering).
 
 ## Key Features
 
@@ -18,9 +18,9 @@ A Python-based asset pipeline toolset for importing **Mega Man Legends (PS1)** a
   - **Rigid Binding**: Automatically sets up rigging to replicate the original game's look and feel with the action figure style (100% weight per limb).
   - **Animation Support**: Parses and applies original frame-based animations to the generated skeleton.
 
-- **Dependency-Free FBX Export**:
-  - Custom **ASCII FBX 7.4 exporter**.
+- **Custom ASCII FBX 7.4 exporter**:
   - Generates valid FBX files with skeletal hierarchies and animation data without relying on the official Autodesk FBX SDK.
+  - **Portability**: Runs standalone without needing a Maya license or heavy SDK installation.
 
 - **Texture Management**:
   - Includes a database system to map models to their correct texture pages and palettes (Color Look-Up Tables).
