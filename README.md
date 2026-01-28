@@ -5,26 +5,33 @@
 
 ![MML Maya Tool Screenshot](images/megaman.gif)
 
-A purely Python-based asset pipeline tool for importing **Mega Man Legends (PS1)** assets into Autodesk Maya. This toolset bridges the gap between retro console formats and modern DCC applications, focusing on accurate preservation of the original "action figure" segmentation and animation style.
+A Python-based asset pipeline toolset for importing **Mega Man Legends (PS1)** assets into Maya. This is mainly a legacy systems research project thats built upon the awesome work of @kion-dgl (The GOAT of MML reverse engineering).
 
 ## Key Features
 
 - **Custom Binary Parsing**:
-  - Implements a full reader for the proprietary `.ebd` (Entity/Model) and `.tim` (Texture) PS1 formats.
+  - Implements a parser for the proprietary `.ebd` (Entity/Model) and `.tim` (Texture) PS1 formats.
   - Handles legacy fixed-point arithmetic (12-bit packed coordinates) and PS1 specific coordinate spaces.
 
 - **Maya Integration**:
   - **Direct Import**: Reconstructs models, skeletons, and materials directly in Maya using `maya.api.OpenMaya` and `maya.cmds`.
-  - **Rigid Binding**: Automatically sets up "action figure" style rigging (100% weight per limb) to replicate the original game's look and feel, avoiding modern vertex blending artifacts.
+  - **Rigid Binding**: Automatically sets up rigging to replicate the original game's look and feel with the action figure style (100% weight per limb).
   - **Animation Support**: Parses and applies original frame-based animations to the generated skeleton.
 
 - **Dependency-Free FBX Export**:
-  - Features a custom-written **ASCII FBX 7.4 exporter** built from scratch.
+  - Custom **ASCII FBX 7.4 exporter**.
   - Generates valid FBX files with skeletal hierarchies and animation data without relying on the official Autodesk FBX SDK.
 
 - **Texture Management**:
-  - Includes a database system to map models to their correct texture pages and palettes (CLUTs).
+  - Includes a database system to map models to their correct texture pages and palettes (Color Look-Up Tables).
   - Handles UV space conversion and texture compositing.
+
+
+## Future Plans
+
+- [ ] add support for USD export
+- [ ] allow users to select which face textures to apply to the model
+- [ ] possibly split this toolset into multiple tools
 
 ## Usage
 
