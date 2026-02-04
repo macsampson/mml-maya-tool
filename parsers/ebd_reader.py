@@ -1,5 +1,7 @@
-
+import json
+import os
 import struct
+
 
 class EBDReader:
     """Read and parse EBD model files."""
@@ -7,6 +9,7 @@ class EBDReader:
     DATA_START = 0x800
 
     def __init__(self, filepath):
+        self.directory = os.path.dirname(filepath)
         with open(filepath, "rb") as f:
             self.data = f.read()
 
@@ -27,7 +30,7 @@ class EBDReader:
         self.models = []
         offset = self.DATA_START + 4
         for i in range(self.model_count):
-            model = self.parse_model(offset)
+            model = self.parse_model(offset, i)
             if model:
                 self.models.append(model)
             offset += 16
@@ -47,7 +50,7 @@ class EBDReader:
     def read_ushort(self, offset):
         return struct.unpack("<H", self.data[offset : offset + 2])[0]
 
-    def parse_model(self, offset):
+    def parse_model(self, offset, model_index=0):
         """Parse a model entry"""
         unknown1 = self.read_int(offset)
         limb_info_addr = self.read_int(offset + 4)
@@ -130,7 +133,8 @@ class EBDReader:
                 limbs.append(limb)
             limb_offset += 20
 
-        return {
+        model = {
+            "unknown1": unknown1,
             "limb_info_start": limb_info_start,
             "lod_offsets": lod_offsets,
             "limbs": limbs,
@@ -138,6 +142,24 @@ class EBDReader:
             "bone_translations": bone_translations,
             "animations": animations,
         }
+
+        # Debug Output
+        try:
+            # Get the directory where THIS script is located
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            temp_dir = os.path.join(script_dir, "temp")
+            
+            if not os.path.exists(temp_dir):
+                os.makedirs(temp_dir)
+
+            file_path = os.path.join(temp_dir, f"model_{model_index}.json")
+            with open(file_path, "w") as f:
+                json.dump(model, f, indent=4)
+            print(f"Successfully dumped model {model_index} to {file_path}")
+        except Exception as e:
+            print(f"Failed to dump model JSON: {e}")
+
+        return model
 
     def parse_limb_info(self, offset):
         """Parse a limb information entry (20 bytes)"""
