@@ -13,8 +13,8 @@ import sys
 import os
 
 
-from parsers.ebd_reader import EBDReader
-from parsers.fbx_exporter import FBXExporter
+from .ebd_reader import EBDReader
+from .fbx_exporter import FBXExporter
 
 
 def usage():
