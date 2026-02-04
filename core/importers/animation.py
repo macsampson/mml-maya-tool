@@ -7,7 +7,7 @@ Handles loading EBD animations and applying them to Maya rigs.
 import os
 import tempfile
 import maya.cmds as cmds
-from MML.parsers.ebd2fbx import EBDReader
+from MML.parsers.ebd_reader import EBDReader
 
 class AnimationImporter:
     """Handles parsing and applying MML animations in Maya."""

@@ -24,7 +24,7 @@ from PySide2 import QtWidgets, QtCore, QtGui
 from shiboken2 import wrapInstance
 
 # Import existing parsers
-from MML.parsers.ebd2fbx import EBDReader
+from MML.parsers.ebd_reader import EBDReader
 from MML.parsers.tim2png import read_mml_tim, render_composite_texture
 
 # Internal imports

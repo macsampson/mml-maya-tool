@@ -13,7 +13,7 @@ import sys
 import os
 
 
-from .ebd_reader import EBDReader
+from MML.parsers.ebd_reader import EBDReader
 from .fbx_exporter import FBXExporter
 
 
