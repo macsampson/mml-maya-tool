@@ -53,7 +53,8 @@ class MMLImporterUI(QtWidgets.QDialog):
         self.setWindowTitle(self.WINDOW_TITLE)
         self.setObjectName(self.WINDOW_NAME)
         self.setMinimumSize(700, 700)
-        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Window)
+        # Keep the parent connection, but force standard window buttons
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint)
         
         self.bin_reader = None
         self.current_file = None
