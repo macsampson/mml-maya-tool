@@ -9,7 +9,7 @@ import sys
 import tempfile
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
-from MML.parsers.ebd2fbx import EBDReader
+from MML.parsers.ebd_reader import EBDReader
 
 class ModelImporter:
     """Handles parsing and creating MML models in Maya."""
@@ -217,7 +217,9 @@ class ModelImporter:
             for tri in limb['triangles']:
                 i0, i1, i2 = tri['indices']
                 counts.append(int(3))
-                connects.append(int(i0)); connects.append(int(i1)); connects.append(int(i2))
+                connects.append(int(i0))
+                connects.append(int(i1))
+                connects.append(int(i2))
                 
                 # UVs
                 face_uv_counts.append(3)
@@ -231,7 +233,10 @@ class ModelImporter:
                 
                 # Triangle 1: (i0, i1, i2) with UVs (0, 1, 2)
                 counts.append(int(3))
-                connects.append(int(i0)); connects.append(int(i1)); connects.append(int(i2))
+                connects.append(int(i0))
+                connects.append(int(i1))
+                connects.append(int(i2))
+
                 face_uv_counts.append(3)
                 face_uv_ids.append(get_uv_idx(quad['uvs'][0][0], quad['uvs'][0][1]))
                 face_uv_ids.append(get_uv_idx(quad['uvs'][1][0], quad['uvs'][1][1]))
@@ -239,7 +244,10 @@ class ModelImporter:
                 
                 # Triangle 2: (i0, i2, i3) with UVs (0, 2, 3)
                 counts.append(int(3))
-                connects.append(int(i0)); connects.append(int(i2)); connects.append(int(i3))
+                connects.append(int(i0))
+                connects.append(int(i2))
+                connects.append(int(i3))
+                
                 face_uv_counts.append(3)
                 face_uv_ids.append(get_uv_idx(quad['uvs'][0][0], quad['uvs'][0][1]))
                 face_uv_ids.append(get_uv_idx(quad['uvs'][2][0], quad['uvs'][2][1]))
@@ -291,290 +299,3 @@ class ModelImporter:
                 
         cmds.select(clear=True)
         return root_group
-
-    @classmethod
-    def _create_mesh(cls, model, name, ebd):
-        """Create Maya mesh from EBD model data."""
-        limb_indices = model.get('limb_indices', [])
-        bone_translations = model.get('bone_translations', [])
-        
-        # Compute world positions for bones
-        world_positions = []
-        for i in range(len(limb_indices)):
-            wx, wy, wz = 0, 0, 0
-            current_idx = i
-            visited = set()
-            
-            while current_idx < len(limb_indices) and current_idx not in visited:
-                visited.add(current_idx)
-                limb_info = limb_indices[current_idx]
-                bone_idx = limb_info['bone_index']
-                
-                if bone_idx < len(bone_translations):
-                    tx, ty, tz = bone_translations[bone_idx]
-                    wx += tx
-                    wy += ty
-                    wz += tz
-                
-                parent_idx = limb_info['parent']
-                if parent_idx == current_idx or parent_idx >= len(limb_indices):
-                    break
-                current_idx = parent_idx
-            
-            world_positions.append((wx * cls.SCALE, wy * cls.SCALE, wz * cls.SCALE))
-        
-        # Collect all geometry with vertex-to-bone mapping
-        all_vertices = []
-        all_faces = []
-        all_uvs = []
-        vertex_bone_map = []  # Maps each vertex index to its owning bone index
-        vertex_offset = 0
-        
-        for bone_idx, limb_info in enumerate(limb_indices):
-            render_idx = limb_info['render']
-            if render_idx >= len(model['limbs']):
-                continue
-            
-            limb = model['limbs'][render_idx]
-            
-            # Get bone world position
-            if bone_idx < len(world_positions):
-                bx, by, bz = world_positions[bone_idx]
-            else:
-                bx, by, bz = 0, 0, 0
-            
-            # Add vertices transformed to world space
-            for vx, vy, vz in limb['vertices']:
-                wx = vx * cls.SCALE + bx
-                wy = vy * cls.SCALE + by
-                wz = vz * cls.SCALE + bz
-                all_vertices.append((wx, wy, wz))
-                vertex_bone_map.append(limb_info['bone_index'])  # Track which bone owns this vertex
-            
-            # Add triangles
-            for tri in limb['triangles']:
-                i0, i1, i2 = tri['indices']
-                all_faces.append([
-                    vertex_offset + i0,
-                    vertex_offset + i1,
-                    vertex_offset + i2
-                ])
-                PIXEL_TO_FLOAT = 1.0 / 256.0
-                PIXEL_ADJUST = 0.5 / 256.0
-                for u, v in tri['uvs']:
-                    all_uvs.append((
-                        u * PIXEL_TO_FLOAT + PIXEL_ADJUST,
-                        1.0 - (v * PIXEL_TO_FLOAT + PIXEL_ADJUST)
-                    ))
-            
-            # Add quads (split into triangles)
-            for quad in limb['quads']:
-                i0, i1, i2, i3 = quad['indices']
-                # First triangle
-                all_faces.append([
-                    vertex_offset + i0,
-                    vertex_offset + i1,
-                    vertex_offset + i2
-                ])
-                # Second triangle
-                all_faces.append([
-                    vertex_offset + i0,
-                    vertex_offset + i2,
-                    vertex_offset + i3
-                ])
-                # UVs for both triangles
-                u0, v0 = quad['uvs'][0]
-                u1, v1 = quad['uvs'][1]
-                u2, v2 = quad['uvs'][2]
-                u3, v3 = quad['uvs'][3]
-                all_uvs.extend([
-                    (u0 / 255.0, 1.0 - v0 / 255.0),
-                    (u1 / 255.0, 1.0 - v1 / 255.0),
-                    (u2 / 255.0, 1.0 - v2 / 255.0),
-                ])
-                all_uvs.extend([
-                    (u0 / 255.0, 1.0 - v0 / 255.0),
-                    (u2 / 255.0, 1.0 - v2 / 255.0),
-                    (u3 / 255.0, 1.0 - v3 / 255.0),
-                ])
-            
-            vertex_offset += len(limb['vertices'])
-        
-        if not all_vertices or not all_faces:
-            cmds.warning("No geometry to create")
-            return None
-        
-        # Create mesh using polyCreateFacet for each face, then combine
-        mesh_name = cmds.createNode('mesh', name=f'{name}Shape')
-        mesh_transform = cmds.listRelatives(mesh_name, parent=True)[0]
-        mesh_transform = cmds.rename(mesh_transform, name)
-        
-        # Build mesh data
-        num_verts = len(all_vertices)
-        num_faces = len(all_faces)
-        
-        # Create vertex positions
-        points = []
-        for v in all_vertices:
-            points.extend(v)
-        
-        # Create face connects and counts
-        face_connects = []
-        face_counts = []
-        for face in all_faces:
-            face_counts.append(len(face))
-            face_connects.extend(face)
-        
-        # Use MEL to create the mesh (more reliable for complex meshes)
-        cmds.select(clear=True)
-        temp_meshes = []
-        
-        for face in all_faces:
-            verts = [all_vertices[i] for i in face]
-            try:
-                facet = cmds.polyCreateFacet(point=verts, constructionHistory=False)
-                if facet:
-                    temp_meshes.append(facet[0])
-            except:
-                continue
-        
-        if temp_meshes:
-            if len(temp_meshes) > 1:
-                result = cmds.polyUnite(temp_meshes, constructionHistory=False, name=name)
-                mesh_transform = result[0]
-            else:
-                mesh_transform = cmds.rename(temp_meshes[0], name)
-            
-            cmds.delete(mesh_transform, constructionHistory=True)
-            cmds.select(clear=True)
-            return (mesh_transform, vertex_bone_map)
-        
-        return None
-    
-    @classmethod
-    def _create_skeleton(cls, model, name):
-        """Create Maya skeleton from EBD model data."""
-        limb_indices = model.get('limb_indices', [])
-        bone_translations = model.get('bone_translations', [])
-        
-        if not limb_indices:
-            return []
-        
-        # Compute world positions
-        world_positions = []
-        for i in range(len(limb_indices)):
-            wx, wy, wz = 0, 0, 0
-            current_idx = i
-            visited = set()
-            
-            while current_idx < len(limb_indices) and current_idx not in visited:
-                visited.add(current_idx)
-                limb_info = limb_indices[current_idx]
-                bone_idx = limb_info['bone_index']
-                
-                if bone_idx < len(bone_translations):
-                    tx, ty, tz = bone_translations[bone_idx]
-                    wx += tx
-                    wy += ty
-                    wz += tz
-                
-                parent_idx = limb_info['parent']
-                if parent_idx == current_idx or parent_idx >= len(limb_indices):
-                    break
-                current_idx = parent_idx
-            
-            world_positions.append((wx * cls.SCALE, wy * cls.SCALE, wz * cls.SCALE))
-        
-        # Create joints
-        joint_map = {}
-        cmds.select(clear=True)
-        
-        for i, limb_info in enumerate(limb_indices):
-            bone_idx = limb_info['bone_index']  # The actual bone index
-            
-            # Only create a joint if this is a Structural Bone (Index == Weight ID)
-            # If Index != Weight ID, this is just extra geometry for an existing bone
-            # This filters out "multiple chest bones" (19, 20, 21) which map to Bone 0
-            if i != bone_idx:
-                continue
-                
-            parent_idx = limb_info['parent']
-            render_idx = limb_info['render']
-            
-            # Determine if root
-            is_root = parent_idx == i or parent_idx >= len(limb_indices)
-            
-            # Additional cycle check: Parent cannot be SELF
-            if parent_idx == i:
-                is_root = True
-            
-            # Get position
-            if i < len(world_positions):
-                px, py, pz = world_positions[i]
-            else:
-                px, py, pz = 0, 0, 0
-            
-            # Select parent if not root
-            # Parent must exist in our map
-            if not is_root and parent_idx in joint_map:
-                cmds.select(joint_map[parent_idx])
-            else:
-                cmds.select(clear=True)
-            
-            # Create joint
-            joint_name = cmds.joint(
-                name=f'{name}_Bone_{i:02d}',
-                position=(px, py, pz),
-                absolute=True
-            )
-            joint_map[i] = joint_name
-        
-        cmds.select(clear=True)
-        return joint_map
-    
-    @classmethod
-    def _bind_skin_rigid(cls, mesh, joints, vertex_bone_map):
-        """Bind mesh to skeleton with rigid weights (action figure style).
-        
-        Each vertex is assigned 100% weight to exactly one bone.
-        No smooth blending between bones.
-        """
-        if not joints or not vertex_bone_map:
-            return None
-        
-        try:
-            # Create list of joint names for skinCluster
-            joint_list = list(joints.values())
-            
-            # Create skin cluster with all joints
-            skin = cmds.skinCluster(
-                joint_list, mesh,
-                toSelectedBones=True,
-                bindMethod=0,  # Closest distance
-                normalizeWeights=1,
-                weightDistribution=0,
-                maximumInfluences=1,  # Only 1 bone per vertex
-                obeyMaxInfluences=True,
-                name=f"{mesh}_skinCluster"
-            )[0]
-            
-            # Get vertex count
-            vertex_count = cmds.polyEvaluate(mesh, vertex=True)
-            
-            # Set rigid weights: 100% to owning bone, 0% to all others
-            for vtx_idx in range(min(vertex_count, len(vertex_bone_map))):
-                bone_weight_id = vertex_bone_map[vtx_idx]
-                if bone_weight_id in joints:
-                    # Set this vertex to 100% weight on its owning joint
-                    vtx = f"{mesh}.vtx[{vtx_idx}]"
-                    cmds.skinPercent(
-                        skin, vtx,
-                        transformValue=(joints[bone_weight_id], 1.0),
-                        normalize=True
-                    )
-            
-            return skin
-            
-        except Exception as e:
-            cmds.warning(f"Failed to bind skin: {e}")
-            return None

@@ -35,26 +35,6 @@ class MMLMayaImporter:
         return ModelImporter.import_ebd(asset, model_index)
     
     @classmethod
-    def _create_rigged_model(cls, model, name):
-        """Create model with separate mesh pieces parented to joints."""
-        return ModelImporter._create_rigged_model(model, name)
-        
-    @classmethod
-    def _create_mesh(cls, model, name, ebd):
-        """Create Maya mesh from EBD model data."""
-        return ModelImporter._create_mesh(model, name, ebd)
-    
-    @classmethod
-    def _create_skeleton(cls, model, name):
-        """Create Maya skeleton from EBD model data."""
-        return ModelImporter._create_skeleton(model, name)
-    
-    @classmethod
-    def _bind_skin_rigid(cls, mesh, joints, vertex_bone_map):
-        """Bind mesh to skeleton with rigid weights."""
-        return ModelImporter._bind_skin_rigid(mesh, joints, vertex_bone_map)
-    
-    @classmethod
     def import_tim(cls, asset, palette_index=0):
         """Import a TIM texture into Maya as a material."""
         return TextureImporter.import_tim(asset, palette_index)
