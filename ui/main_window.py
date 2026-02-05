@@ -359,7 +359,11 @@ class MMLImporterUI(QtWidgets.QDialog):
             self._populate_tree(filter_text)
     
     def _get_model_geometry(self, asset, model_index):
-        """Extract vertices and faces from a model for preview."""
+        """Extract vertices and faces from a model for preview.
+        
+        Uses the same render_to_bone mapping as model.py to avoid duplicate meshes.
+        Only the first bone referencing each primitive (render_idx) is used.
+        """
         ebd = self._get_ebd_data(asset)
         if not ebd or model_index >= len(ebd.models):
             return [], []
@@ -368,38 +372,76 @@ class MMLImporterUI(QtWidgets.QDialog):
         limb_indices = model.get('limb_indices', [])
         bone_translations = model.get('bone_translations', [])
         
+        if not limb_indices:
+            return [], []
+        
         scale = 1.0 / 100.0
-        world_positions = []
-        for i in range(len(limb_indices)):
+        
+        # Build render_to_bone mapping: render_idx (primId) -> bone_idx (childBone)
+        # Also build bone parent hierarchy
+        # This matches model.py: lookup[weights.primId] = bones[weights.childBone]
+        render_to_bone = {}  # render_idx -> first bone that uses this mesh
+        bone_parent = {}     # bone_idx -> parent_bone_idx
+        
+        for i, limb_info in enumerate(limb_indices):
+            render_idx = limb_info['render']
+            parent_bone = limb_info['parent']
+            child_bone = limb_info['bone_index']
+            
+            # Map this mesh to the bone (only first occurrence)
+            if render_idx not in render_to_bone:
+                render_to_bone[render_idx] = child_bone
+            
+            # Build hierarchy (skip first entry like model.py does)
+            if i == 0:
+                continue
+            # Skip if self-referential
+            if parent_bone == child_bone:
+                continue
+            # Only set parent if not already set
+            if child_bone not in bone_parent:
+                bone_parent[child_bone] = parent_bone
+        
+        # Compute world positions for each BONE (not limb_indices entry)
+        # Walk up the bone parent hierarchy
+        num_bones = len(bone_translations)
+        bone_world_positions = {}
+        
+        for bone_idx in range(num_bones):
             wx, wy, wz = 0, 0, 0
-            current_idx = i
+            current = bone_idx
             visited = set()
-            while current_idx < len(limb_indices) and current_idx not in visited:
-                visited.add(current_idx)
-                limb_info = limb_indices[current_idx]
-                bone_idx = limb_info['bone_index']
-                if bone_idx < len(bone_translations):
-                    tx, ty, tz = bone_translations[bone_idx]
+            
+            while current not in visited:
+                visited.add(current)
+                if current < len(bone_translations):
+                    tx, ty, tz = bone_translations[current]
                     wx += tx
                     wy += ty
                     wz += tz
-                parent_idx = limb_info['parent']
-                if parent_idx == current_idx or parent_idx >= len(limb_indices):
+                
+                if current in bone_parent:
+                    current = bone_parent[current]
+                else:
                     break
-                current_idx = parent_idx
-            world_positions.append((wx * scale, wy * scale, wz * scale))
+            
+            bone_world_positions[bone_idx] = (wx * scale, wy * scale, wz * scale)
         
         all_vertices = []
         all_faces = []
         vertex_offset = 0
         
-        for bone_idx, limb_info in enumerate(limb_indices):
-            render_idx = limb_info['render']
-            if render_idx >= len(model['limbs']):
+        # Iterate through model['limbs'] (the actual primitives)
+        # Only create meshes that are in render_to_bone lookup (like model.py does)
+        for limb in model['limbs']:
+            mesh_number = limb['number']  # This is the primId
+            
+            # Skip if this mesh isn't mapped to any bone
+            if mesh_number not in render_to_bone:
                 continue
             
-            limb = model['limbs'][render_idx]
-            bx, by, bz = world_positions[bone_idx] if bone_idx < len(world_positions) else (0, 0, 0)
+            bone_idx = render_to_bone[mesh_number]
+            bx, by, bz = bone_world_positions.get(bone_idx, (0, 0, 0))
             
             for vx, vy, vz in limb['vertices']:
                 all_vertices.append((vx * scale + bx, vy * scale + by, vz * scale + bz))
