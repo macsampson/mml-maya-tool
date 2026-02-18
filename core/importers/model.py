@@ -147,7 +147,8 @@ class ModelImporter:
             joint_name = cmds.joint(
                 name=f'{name}_Bone_{bone_idx:02d}',
                 position=(px, py, pz),
-                absolute=True
+                absolute=True,
+                radius=0.3
             )
             joints[bone_idx] = joint_name
         
