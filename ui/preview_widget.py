@@ -24,9 +24,11 @@ class AssetPreviewWidget(QtWidgets.QWidget):
 
         # Model preview data
         self.vertices = []
-        self.edges = []
+        self.faces = []
         self.rotation_y = 25
         self.rotation_x = 20
+        self._model_center = (0.0, 0.0, 0.0)
+        self._model_diagonal = 1.0
 
         # Texture preview data
         self.texture_image = None  # QImage
@@ -35,14 +37,15 @@ class AssetPreviewWidget(QtWidgets.QWidget):
         self.preview_mode = self.PREVIEW_NONE
 
     def set_model_data(self, vertices, faces):
-        """Set model data for wireframe preview."""
+        """Set model data for mesh preview."""
         self.preview_mode = self.PREVIEW_MODEL
         self.vertices = vertices
+        self.faces = faces
         self.texture_image = None
 
-        # Pre-compute the 3D bounding box center and diagonal.
-        # Using the diagonal as the scale reference means scale is rotation-invariant:
-        # the model always fits inside the viewport at any viewing angle.
+        # Pre-compute 3D bounding box center and diagonal.
+        # The diagonal is the maximum possible projected extent in any direction at any
+        # rotation angle, so using it as the scale reference keeps scale rotation-invariant.
         if vertices:
             xs = [v[0] for v in vertices]
             ys = [v[1] for v in vertices]
@@ -60,16 +63,6 @@ class AssetPreviewWidget(QtWidgets.QWidget):
             self._model_center = (0.0, 0.0, 0.0)
             self._model_diagonal = 1.0
 
-        # Extract edges from faces
-        edge_set = set()
-        for face in faces:
-            for i in range(len(face)):
-                v1 = face[i]
-                v2 = face[(i + 1) % len(face)]
-                edge = (min(v1, v2), max(v1, v2))
-                edge_set.add(edge)
-        self.edges = list(edge_set)
-
         self.update()
 
     def set_texture_data(self, image_data):
@@ -80,7 +73,7 @@ class AssetPreviewWidget(QtWidgets.QWidget):
         """
         self.preview_mode = self.PREVIEW_TEXTURE
         self.vertices = []
-        self.edges = []
+        self.faces = []
 
         try:
             # Convert PIL Image to QImage
@@ -106,7 +99,7 @@ class AssetPreviewWidget(QtWidgets.QWidget):
         """Clear the preview."""
         self.preview_mode = self.PREVIEW_NONE
         self.vertices = []
-        self.edges = []
+        self.faces = []
         self.texture_image = None
         self.update()
 
@@ -120,8 +113,8 @@ class AssetPreviewWidget(QtWidgets.QWidget):
 
         if self.preview_mode == self.PREVIEW_TEXTURE and self.texture_image:
             self._draw_texture(painter)
-        elif self.preview_mode == self.PREVIEW_MODEL and self.vertices and self.edges:
-            self._draw_wireframe(painter)
+        elif self.preview_mode == self.PREVIEW_MODEL and self.vertices and self.faces:
+            self._draw_mesh(painter)
         else:
             # Draw placeholder text
             painter.setPen(QtGui.QColor(100, 100, 100))
@@ -177,8 +170,13 @@ class AssetPreviewWidget(QtWidgets.QWidget):
             f"{img_width}x{img_height}"
         )
 
-    def _draw_wireframe(self, painter):
-        """Draw wireframe model with all-axis rotation and stable scaling."""
+    def _draw_mesh(self, painter):
+        """Draw solid shaded mesh with wireframe on front-facing faces.
+
+        Uses painter's algorithm (back-to-front sort by average view-space Z) for
+        hidden surface removal. Faces are shaded with a simple Lambertian model using
+        a light fixed in view space so shading is stable across rotation.
+        """
         cx, cy, cz = self._model_center
 
         ay = math.radians(self.rotation_y)
@@ -186,9 +184,7 @@ class AssetPreviewWidget(QtWidgets.QWidget):
         cos_ay, sin_ay = math.cos(ay), math.sin(ay)
         cos_ax, sin_ax = math.cos(ax), math.sin(ax)
 
-        # Scale derived from the 3D diagonal rather than the post-rotation 2D extents.
-        # The diagonal is the maximum possible projected extent in any direction at any
-        # rotation, so this scale is rotation-invariant — no stretching at top/bottom view.
+        # Scale from 3D diagonal — rotation-invariant, guaranteed no clipping.
         padding = 20
         available_w = self.width() - padding * 2
         available_h = self.height() - padding * 2
@@ -197,28 +193,89 @@ class AssetPreviewWidget(QtWidgets.QWidget):
         half_w = self.width() / 2
         half_h = self.height() / 2
 
-        projected = []
+        # Project all vertices, storing full view-space coords for normal/depth work.
+        view_coords = []   # (rx, ry2, rz2) after both rotations
+        screen_pts = []    # (px, py) projected to screen
+
         for vx, vy, vz in self.vertices:
-            x = vx - cx
-            y = vy - cy
-            z = vz - cz
+            x, y, z = vx - cx, vy - cy, vz - cz
 
             # Y-axis rotation
-            rx = x * cos_ay + z * sin_ay
-            ry = y
-            rz = -x * sin_ay + z * cos_ay
+            rx  =  x * cos_ay + z * sin_ay
+            ry  =  y
+            rz  = -x * sin_ay + z * cos_ay
 
-            # X-axis rotation applied to Y-rotated result
+            # X-axis rotation
             ry2 = ry * cos_ax - rz * sin_ax
+            rz2 = ry * sin_ax + rz * cos_ax
 
-            projected.append((half_w + rx * scale, half_h - ry2 * scale))
+            view_coords.append((rx, ry2, rz2))
+            screen_pts.append((half_w + rx * scale, half_h - ry2 * scale))
 
-        painter.setPen(QtGui.QPen(QtGui.QColor(100, 200, 100), 1))
-        for v1, v2 in self.edges:
-            if v1 < len(projected) and v2 < len(projected):
-                p1 = projected[v1]
-                p2 = projected[v2]
-                painter.drawLine(int(p1[0]), int(p1[1]), int(p2[0]), int(p2[1]))
+        # Light direction in view space: right, above, toward viewer.
+        # Fixed in view space so shading doesn't shift as the model rotates.
+        # (1, 1, 2) normalized.
+        LIGHT = (0.408, 0.408, 0.816)
+        AMBIENT = 0.35
+
+        # Build per-face data: depth, 2D polygon, front-facing flag, fill gray.
+        face_data = []
+        n_verts = len(self.vertices)
+
+        for face in self.faces:
+            indices = [i for i in face if i < n_verts]
+            if len(indices) < 3:
+                continue
+
+            verts_view = [view_coords[i] for i in indices]
+            pts_2d     = [screen_pts[i]  for i in indices]
+
+            # Average depth for painter's algorithm (larger rz2 = closer to viewer).
+            avg_z = sum(v[2] for v in verts_view) / len(verts_view)
+
+            # Face normal via cross product of first two edges (in view space).
+            # The Z component of the normal directly indicates front (nz > 0) vs. back.
+            v0, v1, v2 = verts_view[0], verts_view[1], verts_view[2]
+            e1x = v1[0] - v0[0];  e1y = v1[1] - v0[1];  e1z = v1[2] - v0[2]
+            e2x = v2[0] - v0[0];  e2y = v2[1] - v0[1];  e2z = v2[2] - v0[2]
+            nx = e1y * e2z - e1z * e2y
+            ny = e1z * e2x - e1x * e2z
+            nz = e1x * e2y - e1y * e2x
+
+            n_len = math.sqrt(nx * nx + ny * ny + nz * nz)
+            if n_len > 0:
+                nx /= n_len;  ny /= n_len;  nz /= n_len
+            else:
+                nz = 0.0
+
+            front_facing = nz > 0
+
+            # Lambertian shading: dot of normal with light direction, clamped to [0, 1].
+            dot = max(0.0, nx * LIGHT[0] + ny * LIGHT[1] + nz * LIGHT[2])
+            brightness = AMBIENT + (1.0 - AMBIENT) * dot
+            gray = max(20, min(210, int(brightness * 210)))
+
+            face_data.append((avg_z, pts_2d, front_facing, gray))
+
+        # Sort back-to-front so nearer faces paint over farther ones.
+        face_data.sort(key=lambda f: f[0])
+
+        # Pass 1 — solid fill for all faces (establishes depth ordering).
+        painter.setPen(QtCore.Qt.NoPen)
+        for _, pts_2d, _, gray in face_data:
+            painter.setBrush(QtGui.QBrush(QtGui.QColor(gray, gray, gray)))
+            painter.drawPolygon(QtGui.QPolygonF(
+                [QtCore.QPointF(p[0], p[1]) for p in pts_2d]
+            ))
+
+        # Pass 2 — wireframe outline on front-facing faces only.
+        painter.setBrush(QtCore.Qt.NoBrush)
+        painter.setPen(QtGui.QPen(QtGui.QColor(100, 200, 100, 160), 1))
+        for _, pts_2d, front_facing, _ in face_data:
+            if front_facing:
+                painter.drawPolygon(QtGui.QPolygonF(
+                    [QtCore.QPointF(p[0], p[1]) for p in pts_2d]
+                ))
 
     def mousePressEvent(self, event):
         """Start drag for rotation."""
